@@ -8,4 +8,9 @@ module.exports = {
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleNameMapper: {
+    '\\.module\\.scss$': 'identity-obj-proxy',
+    '\\.scss$': '<rootDir>/__mocks__/styleMock.js',
+  },
 }
