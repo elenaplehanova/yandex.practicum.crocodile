@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
-import { ThemeProvider, configure } from '@gravity-ui/uikit'
+import { ThemeProvider } from '@gravity-ui/uikit'
 
 const router = createBrowserRouter(routes)
 
