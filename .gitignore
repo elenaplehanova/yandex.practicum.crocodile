@@ -1,6 +1,60 @@
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+/node_modules
+/packages/*/node_modules
+
+# Build outputs
+/dist
+/packages/*/dist
+/dist-ssr
+/build
+/packages/*/build
+
+# Env files
 .env
+.env.*
+!.env.example
+
+# Lockfiles (разрешаем только root)
+package-lock.json
+/packages/*/package-lock.json
+/packages/*/yarn.lock
+/packages/*/pnpm-lock.yaml
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
 .idea
-.vscode
-dist
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Misc
+*.local
 tmp
+*.tmp
+*.swp
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage
+/packages/*/coverage
+
+# Vite / SSR cache
+/.vite
+/packages/*/.vite
+/.cache
+/packages/*/.cache
