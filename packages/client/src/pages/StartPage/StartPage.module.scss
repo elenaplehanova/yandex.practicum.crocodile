@@ -1,0 +1,33 @@
+.start-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+
+  background: url('../../assets/start-page.png') no-repeat center center,
+    linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+    url('../../assets/background_start_game.jpg') no-repeat center center;
+  background-size: 250px 250px, cover, cover;
+  background-position: 900px center, center, center;
+
+  &__header {
+    font-family: SuperBubble, fantasy;
+    text-shadow: var(--text-shadow);
+    font-size: 48px;
+    line-height: 1;
+  }
+  &__button {
+    --g-button-background-color: var(--g-color-base-positive-heavy, green);
+    --g-button-text-color-hover: var(--g-color-base-positive-heavy, darkgreen);
+    --g-button-text-color: var(--g-color-base-generic-ultralight, white);
+    font-weight: 700;
+    & span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+  }
+}
