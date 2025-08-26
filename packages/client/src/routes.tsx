@@ -29,7 +29,6 @@ export const routes = [
   {
     path: '/start',
     Component: StartPage,
-    // fetchData: initStartPage,
   },
   {
     path: '*',
