@@ -1,6 +1,7 @@
 import '@gravity-ui/uikit/styles/styles.css'
 import '@styles/palette.scss'
 import '@styles/global.scss'
+import '@styles/fonts/fonts.scss'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
