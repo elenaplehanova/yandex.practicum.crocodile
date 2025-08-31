@@ -1,6 +1,7 @@
+import '@gravity-ui/uikit/styles/styles.css'
+import { Flex, ThemeProvider, Link } from '@gravity-ui/uikit'
 import { Helmet } from 'react-helmet'
 
-import { Header } from '../components/Header'
 import { usePage } from '../hooks/usePage'
 
 export const NotFoundPage = () => {
@@ -13,8 +14,20 @@ export const NotFoundPage = () => {
         <title>404</title>
         <meta name="description" content="Страница не найдена" />
       </Helmet>
-      <Header />
-      Страница не найдена!
+      <ThemeProvider>
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          direction="column"
+          gap={{ m: 5 }}
+          height="100vh">
+          <h1>404</h1>
+          <p>Страница не найдена</p>
+          <Link view="normal" underline={true} href="#">
+            На главную
+          </Link>
+        </Flex>
+      </ThemeProvider>
     </div>
   )
 }
