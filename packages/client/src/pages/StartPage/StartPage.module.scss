@@ -6,15 +6,15 @@
   flex-direction: column;
   gap: 15px;
 
-  background: url('../../assets/start-page.png') no-repeat center center,
+  background: url('../../assets/start-page.png') no-repeat calc(50% + 300px)
+      center,
     linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
     url('../../assets/background_start_game.jpg') no-repeat center center;
   background-size: 250px 250px, cover, cover;
-  background-position: 900px center, center, center;
 
   &__header {
     font-family: SuperBubble, fantasy;
-    text-shadow: var(--text-shadow);
+    text-shadow: var(--text-shadow-yellow);
     font-size: 48px;
     line-height: 1;
   }
