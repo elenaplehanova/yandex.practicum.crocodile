@@ -8,6 +8,7 @@ import { initGamePage, GamePage } from './pages/Game'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initForumPage, ForumPage } from './pages/Forum'
 import { initTopicPage, TopicPage } from './pages/Topic'
+import { initServerErrorPage, ServerErrorPage } from './pages/ServerError'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
 import { StartPage } from './pages/StartPage'
 
@@ -65,6 +66,11 @@ export const routes = [
   {
     path: '/start',
     Component: StartPage,
+  },
+  {
+    path: '/505',
+    Component: ServerErrorPage,
+    fetchData: initServerErrorPage,
   },
   {
     path: '*',
