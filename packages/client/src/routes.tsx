@@ -4,6 +4,7 @@ import { initMainPage, MainPage } from './pages/Main'
 import { initFriendsPage, FriendsPage } from './pages/FriendsPage'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
 import { StartPage } from './pages/StartPage'
+import { MainPage as MainPageNew } from './pages/MainPage'
 
 export type PageInitContext = {
   clientToken?: string
@@ -29,6 +30,10 @@ export const routes = [
   {
     path: '/start',
     Component: StartPage,
+  },
+  {
+    path: '/mainPage',
+    Component: MainPageNew,
   },
   {
     path: '*',
