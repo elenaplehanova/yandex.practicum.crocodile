@@ -1,17 +1,28 @@
+import { Helmet } from 'react-helmet'
+import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import { Header } from '@components/Header'
-import s from './MainPage.module.scss'
+import { usePage } from '@hooks/usePage'
+import { PageInitArgs } from 'routes'
 import { Button } from '@gravity-ui/uikit'
-import { PlayFill } from '@gravity-ui/icons'
 import { useNavigate } from 'react-router-dom'
+import s from './MainPage.module.scss'
+import { PlayFill } from '@gravity-ui/icons'
 
 export const MainPage = () => {
-  const navigate = useNavigate()
+  usePage({ initPage: initMainPage })
 
+  const navigate = useNavigate()
   const handleClick = () => {
     navigate('/start')
   }
+
   return (
     <div className={s['main-page']}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Главная</title>
+        <meta name="description" content="Главная страница" />
+      </Helmet>
       <Header />
 
       <section className={s['main-page__content']}>
@@ -32,7 +43,6 @@ export const MainPage = () => {
         </Button>
       </section>
 
-      {/* Как играть */}
       <section className={s['main-page__content']}>
         <h2 className={s['main-page__subheader']}>Как играть?</h2>
         <ol>
@@ -49,7 +59,6 @@ export const MainPage = () => {
         </ol>
       </section>
 
-      {/* Где играть */}
       <section className={s['main-page__content']}>
         <h2 className={s['main-page__subheader']}>Где можно играть?</h2>
         <ul>
@@ -89,4 +98,10 @@ export const MainPage = () => {
       </section>
     </div>
   )
+}
+
+export const initMainPage = async ({ dispatch, state }: PageInitArgs) => {
+  if (!selectUser(state)) {
+    return dispatch(fetchUserThunk())
+  }
 }
