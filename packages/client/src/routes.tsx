@@ -67,6 +67,11 @@ export const routes = [
     Component: StartPage,
   },
   {
+    path: '/game',
+    Component: GamePage,
+    fetchData: initGamePage,
+  },
+  {
     path: '*',
     Component: NotFoundPage,
     fetchData: initNotFoundPage,
