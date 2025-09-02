@@ -1,0 +1,10 @@
+.root {
+  min-height: 100vh;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  width: 600px;
+}
