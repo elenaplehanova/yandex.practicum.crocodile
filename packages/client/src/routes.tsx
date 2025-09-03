@@ -43,11 +43,6 @@ export const routes = [
     fetchData: initProfilePage,
   },
   {
-    path: '/start',
-    Component: GamePage,
-    fetchData: initGamePage,
-  },
-  {
     path: '/leaderboard',
     Component: LeaderboardPage,
     fetchData: initLeaderboardPage,
