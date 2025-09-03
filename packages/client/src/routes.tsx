@@ -4,7 +4,7 @@ import { initMainPage, MainPage } from './pages/MainPage'
 
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { GamePage, initGamePage } from './pages/Game'
-import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
+import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
 
 import { initSignInPage, SignInPage } from './pages/SignIn'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
