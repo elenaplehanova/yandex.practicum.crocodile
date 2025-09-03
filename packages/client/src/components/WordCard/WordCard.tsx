@@ -24,7 +24,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [canvasSize, setCanvasSize] = useState({ width: 400, height: 250 })
 
-  // Полифилл для roundRect
   useEffect(() => {
     if (!CanvasRenderingContext2D.prototype.roundRect) {
       CanvasRenderingContext2D.prototype.roundRect = function (
@@ -54,7 +53,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     }
   }, [])
 
-  // Функция для создания крокодилового градиента
   const createCrocodileGradient = (
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -63,15 +61,14 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     height: number
   ) => {
     const gradient = ctx.createLinearGradient(x, y, x + width, y + height)
-    gradient.addColorStop(0, '#2d5a27') // Темно-зеленый
-    gradient.addColorStop(0.3, '#4a7c59') // Средне-зеленый
-    gradient.addColorStop(0.6, '#6b8e23') // Оливковый
-    gradient.addColorStop(0.8, '#8fbc8f') // Светло-зеленый
-    gradient.addColorStop(1, '#98fb98') // Бледно-зеленый
+    gradient.addColorStop(0, '#2d5a27')
+    gradient.addColorStop(0.3, '#4a7c59')
+    gradient.addColorStop(0.6, '#6b8e23')
+    gradient.addColorStop(0.8, '#8fbc8f')
+    gradient.addColorStop(1, '#98fb98')
     return gradient
   }
 
-  // Функция для создания внутреннего свечения
   const createInnerGlow = (
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -93,7 +90,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     return gradient
   }
 
-  // Функция для отрисовки карточки
   const drawCard = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -101,22 +97,18 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Очищаем canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Рисуем внешнюю тень
     ctx.shadowColor = 'rgba(0, 0, 0, 0.4)'
     ctx.shadowBlur = 25
     ctx.shadowOffsetX = 0
     ctx.shadowOffsetY = 15
 
-    // Рисуем основной фон карточки с крокодиловым градиентом
     const cardX = 20
     const cardY = 20
     const cardWidth = canvas.width - 40
     const cardHeight = canvas.height - 40
 
-    // Основной крокодиловый градиент
     ctx.fillStyle = createCrocodileGradient(
       ctx,
       cardX,
@@ -128,31 +120,25 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 25)
     ctx.fill()
 
-    // Убираем тень для внутренних элементов
     ctx.shadowColor = 'transparent'
     ctx.shadowBlur = 0
     ctx.shadowOffsetX = 0
     ctx.shadowOffsetY = 0
 
-    // Рисуем внутреннее свечение
     ctx.fillStyle = createInnerGlow(ctx, cardX, cardY, cardWidth, cardHeight)
     ctx.beginPath()
     ctx.roundRect(cardX + 8, cardY + 8, cardWidth - 16, cardHeight - 16, 20)
     ctx.fill()
 
-    // Рисуем внутренний фон с прозрачностью
     ctx.fillStyle = 'rgba(255, 255, 255, 0.95)'
     ctx.beginPath()
     ctx.roundRect(cardX + 20, cardY + 20, cardWidth - 40, cardHeight - 40, 18)
     ctx.fill()
 
-    // Рисуем декоративные элементы в крокодиловом стиле
     const cornerRadius = 10
     const cornerSize = 20
 
-    // Угловые украшения в виде чешуек
     ctx.fillStyle = 'rgba(45, 90, 39, 0.3)'
-    // Левый верхний угол
     ctx.beginPath()
     ctx.arc(
       cardX + cornerSize,
@@ -162,7 +148,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
       2 * Math.PI
     )
     ctx.fill()
-    // Правый верхний угол
     ctx.beginPath()
     ctx.arc(
       cardX + cardWidth - cornerSize,
@@ -172,7 +157,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
       2 * Math.PI
     )
     ctx.fill()
-    // Левый нижний угол
     ctx.beginPath()
     ctx.arc(
       cardX + cornerSize,
@@ -182,7 +166,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
       2 * Math.PI
     )
     ctx.fill()
-    // Правый нижний угол
     ctx.beginPath()
     ctx.arc(
       cardX + cardWidth - cornerSize,
@@ -194,26 +177,21 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     ctx.fill()
 
     if (isRevealed) {
-      // Отображаем слово по центру карточки с улучшенной видимостью
-      ctx.fillStyle = '#1a3d1a' // Очень темно-зеленый для лучшей читаемости
+      ctx.fillStyle = '#1a3d1a'
       ctx.font = 'bold 32px "Segoe UI", Arial, sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
 
-      // Добавляем белую обводку для лучшей видимости
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 3
 
-      // Разбиваем длинное слово на строки
       const words = word.split(' ')
       let y = cardY + cardHeight / 2
 
       if (words.length === 1) {
-        // Одно слово - центрируем
         ctx.strokeText(word, cardX + cardWidth / 2, y)
         ctx.fillText(word, cardX + cardWidth / 2, y)
       } else {
-        // Несколько слов - распределяем по строкам
         y = cardY + cardHeight / 2 - (words.length - 1) * 20
         words.forEach((wordPart, index) => {
           const currentY = y + index * 40
@@ -222,13 +200,11 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
         })
       }
     } else {
-      // Отображаем заглушку по центру карточки с улучшенной видимостью
-      ctx.fillStyle = '#4a7c59' // Средне-зеленый для лучшей видимости
+      ctx.fillStyle = '#4a7c59'
       ctx.font = 'bold 20px "Segoe UI", Arial, sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
 
-      // Добавляем белую обводку
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 2
 
@@ -246,7 +222,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     }
   }, [word, isRevealed])
 
-  // Обработчик изменения размера
   useEffect(() => {
     const handleResize = () => {
       const container = canvasRef.current?.parentElement
@@ -261,23 +236,21 @@ const WordCard: React.FC<WordCardProps> = ({ word, isRevealed, onToggle }) => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Отрисовка при изменении состояния
   useEffect(() => {
     drawCard()
   }, [drawCard, canvasSize])
 
-  // Обработчик клика по карточке
   const handleCardClick = () => {
     onToggle()
   }
 
   return (
-    <div className={s.wordCardContainer}>
+    <div className={s['word-card']}>
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        className={s.wordCardCanvas}
+        className={s['word-card__canvas']}
         onClick={handleCardClick}
         title={
           isRevealed
