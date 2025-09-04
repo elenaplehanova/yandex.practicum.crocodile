@@ -8,7 +8,10 @@ import { initGamePage, GamePage } from './pages/Game'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initForumPage, ForumPage } from './pages/Forum'
 import { initTopicPage, TopicPage } from './pages/Topic'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
+import {
+  initNotFoundPage,
+  NotFoundPage,
+} from './pages/NotFoundPage/NotFoundPage'
 import { StartPage } from './pages/StartPage'
 
 export type PageInitContext = {

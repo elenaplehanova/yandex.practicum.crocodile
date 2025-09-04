@@ -1,11 +1,13 @@
 import '@gravity-ui/uikit/styles/styles.css'
-import { Flex, ThemeProvider, Link } from '@gravity-ui/uikit'
+import { Flex, ThemeProvider, Button } from '@gravity-ui/uikit'
 import { Helmet } from 'react-helmet'
-
-import { usePage } from '../hooks/usePage'
+import { usePage } from '../../hooks/usePage'
+import { useNavigate } from 'react-router'
+import styles from './NotFoundPage.module.scss'
 
 export const NotFoundPage = () => {
   usePage({ initPage: initNotFoundPage })
+  const navigate = useNavigate()
 
   return (
     <div className="App">
@@ -20,12 +22,11 @@ export const NotFoundPage = () => {
           justifyContent="center"
           direction="column"
           gap={{ m: 5 }}
-          height="100vh">
+          height="100vh"
+          className={styles['error-page']}>
           <h1>404</h1>
           <p>Страница не найдена</p>
-          <Link view="normal" underline={true} href="#">
-            На главную
-          </Link>
+          <Button onClick={() => navigate(-1)}>Вернуться назад</Button>
         </Flex>
       </ThemeProvider>
     </div>
