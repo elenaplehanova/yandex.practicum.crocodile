@@ -3,7 +3,10 @@ import { GamePage, initGamePage } from './pages/Game'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initMainPage, MainPage } from './pages/Main'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
-import { initServerErrorPage, ServerErrorPage } from './pages/ServerError'
+import {
+  initServerErrorPage,
+  ServerErrorPage,
+} from './pages/ServerErrorPage/ServerErrorPage'
 import { initProfilePage, ProfilePage } from './pages/Profile'
 import { initSignInPage, SignInPage } from './pages/SignIn'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
