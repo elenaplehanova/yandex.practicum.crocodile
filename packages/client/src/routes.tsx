@@ -1,18 +1,18 @@
-import { AppDispatch, RootState } from './store'
-
-import { initMainPage, MainPage } from './pages/Main'
-import { initSignInPage, SignInPage } from './pages/SignIn'
-import { initSignUpPage, SignUpPage } from './pages/SignUp'
-import { initProfilePage, ProfilePage } from './pages/Profile'
-import { initGamePage, GamePage } from './pages/Game'
+import { ForumPage, initForumPage } from './pages/Forum/Forum'
+import { GamePage, initGamePage } from './pages/Game'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
-import { initForumPage, ForumPage } from './pages/Forum'
-import { initTopicPage, TopicPage } from './pages/Topic'
+import { initMainPage, MainPage } from './pages/Main'
 import {
   initNotFoundPage,
   NotFoundPage,
 } from './pages/NotFoundPage/NotFoundPage'
+import { initProfilePage, ProfilePage } from './pages/Profile'
+import { initSignInPage, SignInPage } from './pages/SignIn'
+import { initSignUpPage, SignUpPage } from './pages/SignUp'
 import { StartPage } from './pages/StartPage'
+import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
+import { initTopicPage, TopicPage } from './pages/Topic'
+import { AppDispatch, RootState } from './store'
 
 export type PageInitContext = {
   clientToken?: string
@@ -59,6 +59,11 @@ export const routes = [
     path: '/forum',
     Component: ForumPage,
     fetchData: initForumPage,
+  },
+  {
+    path: '/forum/submit',
+    Component: SubmitTopicPage,
+    fetchData: initSubmitTopicPage,
   },
   {
     path: '/forum/:topicId',
