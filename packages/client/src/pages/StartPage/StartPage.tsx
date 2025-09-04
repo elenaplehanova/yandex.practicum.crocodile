@@ -4,9 +4,8 @@ import { PlayFill } from '@gravity-ui/icons'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
-import { PageInitArgs } from 'routes'
-import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import { usePage } from '@hooks/usePage'
+import { ensureUser } from 'utils/initUser'
 
 export const StartPage = () => {
   usePage({ initPage: initStartPage })
@@ -39,8 +38,4 @@ export const StartPage = () => {
   )
 }
 
-export const initStartPage = async ({ dispatch, state }: PageInitArgs) => {
-  if (!selectUser(state)) {
-    return dispatch(fetchUserThunk())
-  }
-}
+export const initStartPage = ensureUser
