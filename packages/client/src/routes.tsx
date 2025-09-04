@@ -8,7 +8,7 @@ import { StartPage } from './pages/StartPage'
 import { initTopicPage, TopicPage } from './pages/Topic'
 import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { AppDispatch, RootState } from './store'
-import { ForumPage, initForumPage } from './pages/Forum'
+import { ForumPage, initForumPage } from './pages/Forum/Forum'
 
 export type PageInitContext = {
   clientToken?: string
