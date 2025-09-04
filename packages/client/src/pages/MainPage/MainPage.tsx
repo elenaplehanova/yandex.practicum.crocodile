@@ -5,7 +5,7 @@ import { Button } from '@gravity-ui/uikit'
 import { useNavigate } from 'react-router-dom'
 import s from './MainPage.module.scss'
 import { PlayFill } from '@gravity-ui/icons'
-import { ensureUser } from 'utils/initUser'
+import { ensureUser } from '@utils/initUser'
 
 export const MainPage = () => {
   usePage({ initPage: initMainPage })
