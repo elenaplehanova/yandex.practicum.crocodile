@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { usePage } from '../../hooks/usePage'
 import WordCard from '../../components/WordCard'
-import ButtonBase from '../../components/ButtonBase'
+import { Button } from '@gravity-ui/uikit'
 import { getRandomWord, getNextWord } from '../../constants/gameWords'
 import s from './GamePage.module.scss'
 
@@ -78,9 +78,7 @@ export const GamePage = () => {
   return (
     <div className={s['game-page']}>
       <div className={s['game-page__header']}>
-        <div className={s['game-page__icon']}>🐊</div>
-        <h1 className={s['game-page__title']}>КРОКОДИЛ</h1>
-        <div className={s['game-page__subtitle']}>Игра в слова</div>
+        <h1 className={s['game-page__title']}>CROCODILE</h1>
       </div>
 
       <div className={s['game-page__instructions']}>
@@ -108,11 +106,13 @@ export const GamePage = () => {
             className={s['game-page__word-input']}
             disabled={isWordRevealed}
           />
-          <ButtonBase
-            text="Проверить"
+          <Button
+            size="xl"
             onClick={handleCheckWord}
             disabled={isWordRevealed || !inputWord.trim()}
-          />
+            className={s['game-page__button']}>
+            Проверить
+          </Button>
         </div>
 
         {errorMessage && (
@@ -128,7 +128,12 @@ export const GamePage = () => {
       </div>
 
       <div className={s['game-page__controls']}>
-        <ButtonBase text="Следующее слово" onClick={handleNextWord} />
+        <Button
+          size="xl"
+          onClick={handleNextWord}
+          className={s['game-page__button']}>
+          Следующее слово
+        </Button>
       </div>
     </div>
   )
