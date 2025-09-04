@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
 import { usePage } from '@hooks/usePage'
-import { ensureUser } from 'utils/initUser'
+import { ensureUser } from '@utils/initUser'
 
 export const StartPage = () => {
   usePage({ initPage: initStartPage })
