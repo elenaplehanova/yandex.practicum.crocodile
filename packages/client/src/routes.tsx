@@ -1,15 +1,15 @@
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { GamePage, initGamePage } from './pages/Game'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
-import { initMainPage, MainPage } from './pages/Main'
+import { initMainPage, MainPage } from './pages/MainPage'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
 import { initProfilePage, ProfilePage } from './pages/Profile'
 import { initSignInPage, SignInPage } from './pages/SignIn'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
-import { StartPage } from './pages/StartPage'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 import { initTopicPage, TopicPage } from './pages/Topic'
 import { AppDispatch, RootState } from './store'
+import { StartPage, initStartPage } from './pages/StartPage'
 
 export type PageInitContext = {
   clientToken?: string
@@ -43,7 +43,7 @@ export const routes = [
     fetchData: initProfilePage,
   },
   {
-    path: '/start',
+    path: '/game',
     Component: GamePage,
     fetchData: initGamePage,
   },
@@ -70,6 +70,7 @@ export const routes = [
   {
     path: '/start',
     Component: StartPage,
+    fetchData: initStartPage,
   },
   {
     path: '*',
