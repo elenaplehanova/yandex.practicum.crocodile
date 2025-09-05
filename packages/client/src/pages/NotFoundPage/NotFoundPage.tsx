@@ -17,13 +17,7 @@ export const NotFoundPage = () => {
         <meta name="description" content="Страница не найдена" />
       </Helmet>
       <ThemeProvider>
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          direction="column"
-          gap={{ m: 5 }}
-          height="100vh"
-          className={styles['error-page']}>
+        <Flex className={styles['error-page']}>
           <h1>404</h1>
           <p>Страница не найдена</p>
           <Button onClick={() => navigate(-1)}>Вернуться назад</Button>
