@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { usePage } from '../hooks/usePage'
-import WordCard from '../components/WordCard'
-import ButtonBase from '../components/ButtonBase'
-import { getRandomWord, getNextWord } from '../constants/gameWords'
-import s from './Game.module.scss'
+import { usePage } from '../../hooks/usePage'
+import WordCard from '../../components/WordCard'
+import { Button } from '@gravity-ui/uikit'
+import { getRandomWord, getNextWord } from '../../constants/gameWords'
+import s from './GamePage.module.scss'
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
@@ -14,30 +14,24 @@ export const GamePage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
-  // Инициализация игры
   useEffect(() => {
     const initialWord = getRandomWord()
     setCurrentWord(initialWord)
   }, [])
 
-  // Обработчик переключения видимости слова
   const handleToggleWord = () => {
     setIsWordRevealed(!isWordRevealed)
-    // Скрываем сообщения при переключении
     setErrorMessage('')
     setIsCorrect(null)
   }
 
-  // Обработчик ввода слова
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setInputWord(value)
-    // Очищаем сообщения при вводе
     setErrorMessage('')
     setIsCorrect(null)
   }
 
-  // Обработчик проверки слова
   const handleCheckWord = () => {
     if (!inputWord.trim()) {
       setErrorMessage('Введите слово')
@@ -57,7 +51,6 @@ export const GamePage = () => {
     if (isWordCorrect) {
       setIsCorrect(true)
       setErrorMessage('Правильно! Переходим к следующему слову')
-      // Автоматически переходим к следующему слову через 1.5 секунды
       setTimeout(() => {
         handleNextWord()
       }, 1500)
@@ -67,14 +60,12 @@ export const GamePage = () => {
     }
   }
 
-  // Обработчик нажатия Enter в инпуте
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleCheckWord()
     }
   }
 
-  // Обработчик получения следующего слова
   const handleNextWord = () => {
     const nextWord = getNextWord(currentWord)
     setCurrentWord(nextWord)
@@ -85,14 +76,18 @@ export const GamePage = () => {
   }
 
   return (
-    <div className={s.gamePage}>
-      <div className={s.gameHeader}>
-        <div className={s.crocodileIcon}>🐊</div>
-        <h1 className={s.gameTitle}>КРОКОДИЛ</h1>
-        <div className={s.gameSubtitle}>Игра в слова</div>
+    <div className={s['game-page']}>
+      <div className={s['game-page__header']}>
+        <h1 className={s['game-page__title']}>CROCODILE</h1>
       </div>
 
-      <div className={s.wordCardSection}>
+      <div className={s['game-page__instructions']}>
+        <p>Нажмите на карточку, чтобы увидеть слово</p>
+        <p>Введите слово в поле ниже и нажмите "Проверить"</p>
+        <p>Слово должно быть скрыто для ввода</p>
+      </div>
+
+      <div className={s['game-page__word-card']}>
         <WordCard
           word={currentWord}
           isRevealed={isWordRevealed}
@@ -100,33 +95,45 @@ export const GamePage = () => {
         />
       </div>
 
-      <div className={s.inputSection}>
-        <div className={s.inputContainer}>
+      <div className={s['game-page__input']}>
+        <div className={s['game-page__input-container']}>
           <input
             type="text"
             value={inputWord}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             placeholder="Введите слово..."
-            className={s.wordInput}
+            className={s['game-page__word-input']}
             disabled={isWordRevealed}
           />
-          <ButtonBase
-            text="Проверить"
+          <Button
+            size="xl"
             onClick={handleCheckWord}
             disabled={isWordRevealed || !inputWord.trim()}
-          />
+            className={s['game-page__button']}>
+            Проверить
+          </Button>
         </div>
 
         {errorMessage && (
-          <div className={`${s.message} ${isCorrect ? s.success : s.error}`}>
+          <div
+            className={`${s['game-page__message']} ${
+              isCorrect
+                ? s['game-page__message--success']
+                : s['game-page__message--error']
+            }`}>
             {errorMessage}
           </div>
         )}
       </div>
 
-      <div className={s.gameControls}>
-        <ButtonBase text="Следующее слово" onClick={handleNextWord} />
+      <div className={s['game-page__controls']}>
+        <Button
+          size="xl"
+          onClick={handleNextWord}
+          className={s['game-page__button']}>
+          Следующее слово
+        </Button>
       </div>
     </div>
   )

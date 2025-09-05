@@ -1,5 +1,3 @@
-import { ForumPage, initForumPage } from './pages/Forum/Forum'
-import { GamePage, initGamePage } from './pages/Game'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
@@ -8,7 +6,9 @@ import { initSignInPage, SignInPage } from './pages/SignIn'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 import { initTopicPage, TopicPage } from './pages/Topic'
+import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { AppDispatch, RootState } from './store'
+import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { StartPage, initStartPage } from './pages/StartPage'
 
 export type PageInitContext = {
@@ -43,11 +43,6 @@ export const routes = [
     fetchData: initProfilePage,
   },
   {
-    path: '/game',
-    Component: GamePage,
-    fetchData: initGamePage,
-  },
-  {
     path: '/leaderboard',
     Component: LeaderboardPage,
     fetchData: initLeaderboardPage,
@@ -56,11 +51,6 @@ export const routes = [
     path: '/forum',
     Component: ForumPage,
     fetchData: initForumPage,
-  },
-  {
-    path: '/forum/submit',
-    Component: SubmitTopicPage,
-    fetchData: initSubmitTopicPage,
   },
   {
     path: '/forum/:topicId',
