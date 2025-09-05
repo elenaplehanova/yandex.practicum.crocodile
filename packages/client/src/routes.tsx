@@ -2,7 +2,10 @@ import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initMainPage, MainPage } from './pages/MainPage'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
+import {
+  initNotFoundPage,
+  NotFoundPage,
+} from './pages/NotFoundPage/NotFoundPage'
 import { initProfilePage, ProfilePage } from './pages/Profile'
 import { SignIn as SignInPage } from './pages/Auth'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
