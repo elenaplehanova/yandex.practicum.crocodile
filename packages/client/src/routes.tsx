@@ -33,7 +33,6 @@ export const routes = [
   {
     path: '/sign-in',
     Component: SignInPage,
-    fetchData: initSignInPage,
   },
   {
     path: '/sign-up',
