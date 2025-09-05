@@ -1,0 +1,18 @@
+stateDiagram-v2
+  [*] --> LOBBY
+  LOBBY --> ROUND_PREP: "Старт игры"
+  state ROUND_PREP {
+    [*] --> SHOW_CARD
+    SHOW_CARD --> WAIT_READY: "Ведущий видит слово"
+    WAIT_READY --> ACTIVE: "Ведущий готов"
+  }
+  ACTIVE --> ROUND_END: "Первый верный ответ"
+  ACTIVE --> ROUND_END: "Время истекло"
+  state ROUND_END {
+    [*] --> SCORING
+    SCORING --> NEXT: "Начислить/штраф"
+  }
+  NEXT --> ACTIVE: "Следующий ведущий и раунд"
+  NEXT --> GAME_END: "Раунды исчерпаны"
+  GAME_END --> [*]
+

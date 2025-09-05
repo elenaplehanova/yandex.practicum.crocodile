@@ -1,15 +1,15 @@
-import { AppDispatch, RootState } from './store'
-
-import { initMainPage, MainPage } from './pages/Main'
+import { ForumPage, initForumPage } from './pages/Forum/Forum'
+import { GamePage, initGamePage } from './pages/Game'
+import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
+import { initMainPage, MainPage } from './pages/MainPage'
+import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
+import { initProfilePage, ProfilePage } from './pages/Profile'
 import { initSignInPage, SignInPage } from './pages/SignIn'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
-import { initProfilePage, ProfilePage } from './pages/Profile'
-import { initGamePage, GamePage } from './pages/Game'
-import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
-import { initForumPage, ForumPage } from './pages/Forum'
+import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 import { initTopicPage, TopicPage } from './pages/Topic'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
-import { StartPage } from './pages/StartPage'
+import { AppDispatch, RootState } from './store'
+import { StartPage, initStartPage } from './pages/StartPage'
 
 export type PageInitContext = {
   clientToken?: string
@@ -43,7 +43,7 @@ export const routes = [
     fetchData: initProfilePage,
   },
   {
-    path: '/start',
+    path: '/game',
     Component: GamePage,
     fetchData: initGamePage,
   },
@@ -58,6 +58,11 @@ export const routes = [
     fetchData: initForumPage,
   },
   {
+    path: '/forum/submit',
+    Component: SubmitTopicPage,
+    fetchData: initSubmitTopicPage,
+  },
+  {
     path: '/forum/:topicId',
     Component: TopicPage,
     fetchData: initTopicPage,
@@ -65,6 +70,7 @@ export const routes = [
   {
     path: '/start',
     Component: StartPage,
+    fetchData: initStartPage,
   },
   {
     path: '/game',
