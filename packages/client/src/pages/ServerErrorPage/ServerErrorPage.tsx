@@ -17,13 +17,7 @@ export const ServerErrorPage = () => {
         <meta name="description" content="Ошибка сервера" />
       </Helmet>
       <ThemeProvider>
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          direction="column"
-          gap={{ m: 5 }}
-          height="100vh"
-          className={styles['error-page']}>
+        <Flex className={styles['error-page']}>
           <h1>Oops</h1>
           <p>Что-то пошло не так</p>
           <Button onClick={() => navigate(-1)}>Вернуться назад</Button>
