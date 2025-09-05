@@ -10,7 +10,7 @@ export const NotFoundPage = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="App">
+    <div>
       <Helmet>
         <meta charSet="utf-8" />
         <title>404</title>
