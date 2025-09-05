@@ -13,7 +13,6 @@ export const Header = () => {
     { text: 'Forum', link: '/forum' },
     { text: 'Profile', link: '/profile' },
     { text: 'Start', link: '/start' },
-    { text: 'mainPage', link: '/mainPage' },
   ]
 
   return (
