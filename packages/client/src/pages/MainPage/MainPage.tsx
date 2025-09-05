@@ -18,7 +18,6 @@ export const MainPage = () => {
   return (
     <div className={s['main-page']}>
       <Helmet>
-        <meta charSet="utf-8" />
         <title>Главная</title>
         <meta name="description" content="Главная страница" />
       </Helmet>
