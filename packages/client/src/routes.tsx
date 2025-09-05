@@ -4,7 +4,7 @@ import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
 import { initProfilePage, ProfilePage } from './pages/Profile'
-import { initSignInPage, SignInPage } from './pages/SignIn'
+import { SignIn as SignInPage } from './pages/Auth'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 import { initTopicPage, TopicPage } from './pages/Topic'
@@ -30,7 +30,6 @@ export const routes = [
   {
     path: '/sign-in',
     Component: SignInPage,
-    fetchData: initSignInPage,
   },
   {
     path: '/sign-up',
