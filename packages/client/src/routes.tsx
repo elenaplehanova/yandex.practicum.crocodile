@@ -1,5 +1,5 @@
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
-import { GamePage, initGamePage } from './pages/Game'
+import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
