@@ -19,7 +19,6 @@ export const StartPage = () => {
   return (
     <div className={s['start-page']}>
       <Helmet>
-        <meta charSet="utf-8" />
         <title>Старт</title>
         <meta name="description" content="Стартовая страница" />
       </Helmet>
