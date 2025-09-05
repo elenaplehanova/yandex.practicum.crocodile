@@ -11,8 +11,8 @@ import {
   Modal,
 } from '@gravity-ui/uikit'
 import { API_URL } from '../../constants'
-import styles from './Profile.module.scss'
 import React from 'react'
+import styles from './ProfilePage.module.scss'
 
 export const ProfilePage = () => {
   const [newFirstName, setNewFirstName] = useState('')
@@ -24,6 +24,7 @@ export const ProfilePage = () => {
   const [newAvatar, setNewAvatar] = useState('')
   const [open, setOpen] = useState(false)
   const [avatarPreview, setAvatarPreview] = useState('')
+  const [message, setMessage] = useState('')
 
   const tempUserLogin = async () => {
     // временное решение пока не реализована авторизация / регистрация
@@ -58,16 +59,23 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     tempUserLogin().then(() => {
-      getUserInfo().then(data => {
-        setNewFirstName(data.first_name)
-        setNewSecondName(data.second_name)
-        setNewDisplayName(data.display_name)
-        setNewLogin(data.login)
-        setNewEmail(data.email)
-        setNewPhone(data.phone)
-        setNewAvatar(data.avatar)
-        setAvatarPreview(API_URL + '/resources/' + data.avatar)
-      })
+      getUserInfo()
+        .then(data => {
+          setNewFirstName(data.first_name)
+          setNewSecondName(data.second_name)
+          setNewDisplayName(data.display_name)
+          setNewLogin(data.login)
+          setNewEmail(data.email)
+          setNewPhone(data.phone)
+          setNewAvatar(data.avatar)
+          setAvatarPreview(API_URL + '/resources/' + data.avatar)
+          setMessage('')
+        })
+        .catch(error => {
+          setMessage(
+            'Ошибка при загрузке информации о пользователе: ' + error.message
+          )
+        })
     })
   }, [])
 
@@ -96,10 +104,11 @@ export const ProfilePage = () => {
           setNewEmail(data.email)
           setNewPhone(data.phone)
           setAvatarPreview(API_URL + '/resources/' + data.avatar)
+          setMessage('Профиль обновлен')
         })
       })
       .catch(error => {
-        console.error(error)
+        setMessage('Ошибка при обновлении профиля: ' + error.message)
       })
   }
 
@@ -117,6 +126,7 @@ export const ProfilePage = () => {
       const data = await response.json()
       setNewAvatar(data.avatar)
       setAvatarPreview(API_URL + '/resources/' + data.avatar)
+      setMessage('Аватар изменен')
     }, [])
     const { controlProps, triggerProps } = useFileInput({
       onUpdate,
@@ -124,7 +134,7 @@ export const ProfilePage = () => {
     return (
       <React.Fragment>
         <input name="avatar" {...controlProps} />
-        <Button {...triggerProps}>Upload</Button>
+        <Button {...triggerProps}>Загрузить</Button>
       </React.Fragment>
     )
   }
@@ -156,7 +166,7 @@ export const ProfilePage = () => {
 
     return (
       <React.Fragment>
-        <Flex gap="2">
+        <Flex gap="2" className={styles['password-input']}>
           <TextInput
             label="Старый пароль"
             type="password"
@@ -170,7 +180,7 @@ export const ProfilePage = () => {
             onChange={e => setNewPassword(e.target.value)}
           />
         </Flex>
-        <Flex direction="column" gap="2">
+        <Flex direction="column" gap="2" className={styles['password-btns']}>
           {passwordError && <Text variant="body-1">{passwordError}</Text>}
           <Button onClick={handlePasswordChange}>Сменить пароль</Button>
         </Flex>
@@ -179,17 +189,20 @@ export const ProfilePage = () => {
   }
 
   return (
-    <div className="App">
+    <div className={styles['profile-page']}>
       <Container maxWidth="m">
         <Text variant="header-2" className={styles['profile-title']}>
           Профиль
         </Text>
         <Flex direction="column" gap="4">
-          <Flex gap="2">
+          <Flex gap="2" className={styles['profile-avatar']}>
             <Avatar alt={newFirstName} size="xl" imgUrl={avatarPreview} />
             <AvatarUpdate />
           </Flex>
         </Flex>
+        <Text variant="body-1" className={styles['profile-noty']}>
+          {message}
+        </Text>
         <Flex direction="column" gap="4">
           <Flex gap="2">
             <TextInput
@@ -231,7 +244,10 @@ export const ProfilePage = () => {
             Обновить профиль
           </Button>
         </Flex>
-        <Flex direction="column" gap="4">
+        <Flex
+          direction="column"
+          gap="4"
+          className={styles['profile-password_link']}>
           <Button onClick={() => setOpen(true)}>Поменять пароль</Button>
           <Modal open={open} onClose={() => setOpen(false)}>
             <ChangePassword />
