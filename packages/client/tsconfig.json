@@ -21,6 +21,7 @@
       "@styles/*": ["styles/*"],
       "@slices/*": ["slices/*"],
       "@hooks/*": ["hooks/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["src"],

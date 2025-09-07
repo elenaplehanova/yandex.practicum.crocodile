@@ -1,12 +1,11 @@
 import { Helmet } from 'react-helmet'
-import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import { Header } from '@components/Header'
 import { usePage } from '@hooks/usePage'
-import { PageInitArgs } from 'routes'
 import { Button } from '@gravity-ui/uikit'
 import { useNavigate } from 'react-router-dom'
 import s from './MainPage.module.scss'
 import { PlayFill } from '@gravity-ui/icons'
+import { ensureUser } from '@utils/initUser'
 
 export const MainPage = () => {
   usePage({ initPage: initMainPage })
@@ -19,7 +18,6 @@ export const MainPage = () => {
   return (
     <div className={s['main-page']}>
       <Helmet>
-        <meta charSet="utf-8" />
         <title>Главная</title>
         <meta name="description" content="Главная страница" />
       </Helmet>
@@ -100,8 +98,4 @@ export const MainPage = () => {
   )
 }
 
-export const initMainPage = async ({ dispatch, state }: PageInitArgs) => {
-  if (!selectUser(state)) {
-    return dispatch(fetchUserThunk())
-  }
-}
+export const initMainPage = ensureUser

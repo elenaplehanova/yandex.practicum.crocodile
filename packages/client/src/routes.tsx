@@ -1,17 +1,17 @@
 import { AppDispatch, RootState } from './store'
-
 import { initMainPage, MainPage } from './pages/MainPage'
-
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
-import { GamePage, initGamePage } from './pages/Game'
+import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
 
-import { initSignInPage, SignInPage } from './pages/SignIn'
+import { SignIn as SignInPage } from './pages/Auth'
 import { initSignUpPage, SignUpPage } from './pages/SignUp'
 import { initProfilePage, ProfilePage } from './pages/Profile'
-
 import { initTopicPage, TopicPage } from './pages/Topic'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
+import {
+  initNotFoundPage,
+  NotFoundPage,
+} from './pages/NotFoundPage/NotFoundPage'
 import { StartPage, initStartPage } from './pages/StartPage'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
@@ -34,7 +34,6 @@ export const routes = [
   {
     path: '/sign-in',
     Component: SignInPage,
-    fetchData: initSignInPage,
   },
   {
     path: '/sign-up',
