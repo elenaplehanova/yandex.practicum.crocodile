@@ -1,18 +1,19 @@
+import { AppDispatch, RootState } from './store'
+import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { initGamePage, GamePage } from './pages/GamePage/GamePage'
-import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
-import { initMainPage, MainPage } from './pages/MainPage'
+import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
+
+import { SignIn as SignInPage } from './pages/Auth'
+import { initSignUpPage, SignUpPage } from './pages/SignUp'
+import { initProfilePage, ProfilePage } from './pages/Profile'
+import { initTopicPage, TopicPage } from './pages/Topic'
 import {
   initNotFoundPage,
   NotFoundPage,
 } from './pages/NotFoundPage/NotFoundPage'
-import { initProfilePage, ProfilePage } from './pages/Profile'
-import { SignIn as SignInPage } from './pages/Auth'
-import { initSignUpPage, SignUpPage } from './pages/SignUp'
-import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
-import { initTopicPage, TopicPage } from './pages/Topic'
-import { AppDispatch, RootState } from './store'
 import { StartPage, initStartPage } from './pages/StartPage'
+import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
 export type PageInitContext = {
   clientToken?: string
