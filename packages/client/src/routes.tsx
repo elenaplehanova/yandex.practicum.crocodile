@@ -1,15 +1,18 @@
-import { initLeaderboardPage, LeaderboardPage } from './pages/Leaderboard'
-import { initMainPage, MainPage } from './pages/MainPage'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
-import { initProfilePage, ProfilePage } from './pages/Profile'
-import { initSignInPage, SignInPage } from './pages/SignIn'
-import { initSignUpPage, SignUpPage } from './pages/SignUp'
-import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
-import { initTopicPage, TopicPage } from './pages/Topic'
-import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { AppDispatch, RootState } from './store'
+import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
+import { initGamePage, GamePage } from './pages/GamePage/GamePage'
+import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
+import { SignIn as SignInPage } from './pages/Auth'
+import { initSignUpPage, SignUpPage } from './pages/SignUp'
+import { initProfilePage, ProfilePage } from './pages/Profile'
+import { initTopicPage, TopicPage } from './pages/Topic'
+import {
+  initNotFoundPage,
+  NotFoundPage,
+} from './pages/NotFoundPage/NotFoundPage'
 import { StartPage, initStartPage } from './pages/StartPage'
+import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
 export type PageInitContext = {
   clientToken?: string
@@ -30,7 +33,6 @@ export const routes = [
   {
     path: '/sign-in',
     Component: SignInPage,
-    fetchData: initSignInPage,
   },
   {
     path: '/sign-up',
@@ -43,6 +45,11 @@ export const routes = [
     fetchData: initProfilePage,
   },
   {
+    path: '/game',
+    Component: GamePage,
+    fetchData: initGamePage,
+  },
+  {
     path: '/leaderboard',
     Component: LeaderboardPage,
     fetchData: initLeaderboardPage,
@@ -53,6 +60,11 @@ export const routes = [
     fetchData: initForumPage,
   },
   {
+    path: '/forum/submit',
+    Component: SubmitTopicPage,
+    fetchData: initSubmitTopicPage,
+  },
+  {
     path: '/forum/:topicId',
     Component: TopicPage,
     fetchData: initTopicPage,
@@ -61,11 +73,6 @@ export const routes = [
     path: '/start',
     Component: StartPage,
     fetchData: initStartPage,
-  },
-  {
-    path: '/game',
-    Component: GamePage,
-    fetchData: initGamePage,
   },
   {
     path: '*',
