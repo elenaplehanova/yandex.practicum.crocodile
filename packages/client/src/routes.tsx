@@ -12,6 +12,10 @@ import {
   initNotFoundPage,
   NotFoundPage,
 } from './pages/NotFoundPage/NotFoundPage'
+import {
+  initServerErrorPage,
+  ServerErrorPage,
+} from './pages/ServerErrorPage/ServerErrorPage'
 import { StartPage, initStartPage } from './pages/StartPage'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
@@ -74,6 +78,11 @@ export const routes = [
     path: '/start',
     Component: StartPage,
     fetchData: initStartPage,
+  },
+  {
+    path: '/505',
+    Component: ServerErrorPage,
+    fetchData: initServerErrorPage,
   },
   {
     path: '*',
