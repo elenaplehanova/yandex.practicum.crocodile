@@ -4,6 +4,8 @@ import WordCard from '../../components/WordCard'
 import { Button } from '@gravity-ui/uikit'
 import { getRandomWord, getNextWord } from '../../constants/gameWords'
 import s from './GamePage.module.scss'
+import { Helmet } from 'react-helmet'
+import { Header } from '@components/Header'
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
@@ -13,6 +15,27 @@ export const GamePage = () => {
   const [inputWord, setInputWord] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+  const [timeLeft, setTimeLeft] = useState<number>(60)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s < 10 ? '0' : ''}${s}`
+  }
 
   useEffect(() => {
     const initialWord = getRandomWord()
@@ -77,14 +100,24 @@ export const GamePage = () => {
 
   return (
     <div className={s['game-page']}>
-      <div className={s['game-page__header']}>
-        <h1 className={s['game-page__title']}>CROCODILE</h1>
-      </div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Game</title>
+        <meta name="description" content="Страница с игрой" />
+      </Helmet>
+      <Header />
 
       <div className={s['game-page__instructions']}>
         <p>Нажмите на карточку, чтобы увидеть слово</p>
         <p>Введите слово в поле ниже и нажмите "Проверить"</p>
         <p>Слово должно быть скрыто для ввода</p>
+      </div>
+
+      <div className={s['game-page__timer']}>
+        Осталось времени:
+        <span className={s['game-page__timer_accent']}>
+          {formatTime(timeLeft)}
+        </span>
       </div>
 
       <div className={s['game-page__word-card']}>

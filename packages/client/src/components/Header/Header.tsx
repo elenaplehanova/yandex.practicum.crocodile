@@ -12,6 +12,7 @@ const MENU_ITEMS: MenuItem[] = [
   { text: 'Forum', link: '/forum' },
   { text: 'Profile', link: '/profile' },
   { text: 'Start', link: '/start' },
+  { text: 'Game', link: '/game' },
 ]
 
 export const Header = () => {
