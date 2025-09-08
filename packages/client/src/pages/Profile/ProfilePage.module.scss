@@ -1,35 +1,28 @@
 .profile-page {
     padding: 25px;
 
-    .profile-title {
+    &__title {
         display: block;
         text-align: center;
         margin: 25px 0px;
     }
 
-    .profile-avatar {
+    &__avatar {
         align-items: center;
         justify-content: center;
         gap: 25px;
         margin-bottom: 25px;
     }
 
-    .profile-password_link {
+    &__password_link {
         margin-top: 25px;
     }
 
-    .profile-noty {
+    &__noty {
         width: 100%;
         display: block;
         text-align: center;
         font-weight: 500;
         margin-bottom: 20px;
     }
-}
-
-.password-input {
-    padding: 20px;
-}
-.password-btns {
-    padding: 0px 20px 20px 20px;
 }

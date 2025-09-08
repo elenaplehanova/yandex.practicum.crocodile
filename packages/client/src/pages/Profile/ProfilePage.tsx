@@ -8,10 +8,10 @@ import {
   TextInput,
   Avatar,
   useFileInput,
-  Modal,
 } from '@gravity-ui/uikit'
 import { API_URL } from '../../constants'
 import React from 'react'
+import { ChangePasswordModal } from '../../components/ChangePasswordModal/ChangePasswordModal'
 import styles from './ProfilePage.module.scss'
 
 export const ProfilePage = () => {
@@ -22,7 +22,6 @@ export const ProfilePage = () => {
   const [newEmail, setNewEmail] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newAvatar, setNewAvatar] = useState('')
-  const [open, setOpen] = useState(false)
   const [avatarPreview, setAvatarPreview] = useState('')
   const [message, setMessage] = useState('')
 
@@ -139,68 +138,19 @@ export const ProfilePage = () => {
     )
   }
 
-  const ChangePassword = () => {
-    const [oldPassword, setOldPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [passwordError, setPasswordError] = useState('')
-
-    const handlePasswordChange = () => {
-      fetch(`${API_URL}/user/password`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          oldPassword,
-          newPassword,
-        }),
-      }).then(response => {
-        if (response.ok) {
-          setPasswordError('Пароль успешно изменен')
-        } else {
-          response.text().then(text => setPasswordError(text))
-        }
-      })
-    }
-
-    return (
-      <React.Fragment>
-        <Flex gap="2" className={styles['password-input']}>
-          <TextInput
-            label="Старый пароль"
-            type="password"
-            value={oldPassword}
-            onChange={e => setOldPassword(e.target.value)}
-          />
-          <TextInput
-            label="Новый пароль"
-            type="password"
-            value={newPassword}
-            onChange={e => setNewPassword(e.target.value)}
-          />
-        </Flex>
-        <Flex direction="column" gap="2" className={styles['password-btns']}>
-          {passwordError && <Text variant="body-1">{passwordError}</Text>}
-          <Button onClick={handlePasswordChange}>Сменить пароль</Button>
-        </Flex>
-      </React.Fragment>
-    )
-  }
-
   return (
     <div className={styles['profile-page']}>
       <Container maxWidth="m">
-        <Text variant="header-2" className={styles['profile-title']}>
+        <Text variant="header-2" className={styles['profile-page__title']}>
           Профиль
         </Text>
         <Flex direction="column" gap="4">
-          <Flex gap="2" className={styles['profile-avatar']}>
+          <Flex gap="2" className={styles['profile-page__avatar']}>
             <Avatar alt={newFirstName} size="xl" imgUrl={avatarPreview} />
             <AvatarUpdate />
           </Flex>
         </Flex>
-        <Text variant="body-1" className={styles['profile-noty']}>
+        <Text variant="body-1" className={styles['profile-page__noty']}>
           {message}
         </Text>
         <Flex direction="column" gap="4">
@@ -247,11 +197,8 @@ export const ProfilePage = () => {
         <Flex
           direction="column"
           gap="4"
-          className={styles['profile-password_link']}>
-          <Button onClick={() => setOpen(true)}>Поменять пароль</Button>
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <ChangePassword />
-          </Modal>
+          className={styles['profile-page__password_link']}>
+          <ChangePasswordModal />
         </Flex>
       </Container>
     </div>
