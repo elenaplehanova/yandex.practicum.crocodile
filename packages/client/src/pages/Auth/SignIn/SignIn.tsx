@@ -1,82 +1,54 @@
-import { type FC, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useForm, Controller } from 'react-hook-form'
-import { TextInput, Button } from '@gravity-ui/uikit'
+import { type FC } from 'react'
 
-import { AuthTemplate } from '../AuthTemplate'
 import {
-  title,
-  submitTitle,
-  navigateTitle,
-  inputs,
-  defaultValues,
-} from './SignIn.constants'
-import type { FormValues } from './SignIn.types'
-import styles from './SignIn.module.scss'
+  AuthMain,
+  InputNames,
+  type FormDefaultValues,
+  type InputProps,
+} from '../AuthMain'
 
 export const SignIn: FC = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues,
-  })
+  const title = 'Добро пожаловать в игру «Крокодил»!'
+  const submitButtonTitle = 'Войти'
+  const navigateButtonTitle = 'Нет аккаунта?'
+  const navigateRoute = '/sign-up'
 
-  const navigate = useNavigate()
-  const [isLoading, setLoading] = useState(false)
+  const inputs: InputProps[] = [
+    {
+      id: InputNames.Login,
+      label: 'Логин',
+      name: InputNames.Login,
+      placeholder: 'Введите логин',
+      type: 'text',
+    },
+    {
+      id: InputNames.Password,
+      label: 'Пароль',
+      name: InputNames.Password,
+      placeholder: 'Введите пароль',
+      type: 'password',
+    },
+  ]
 
-  const onSubmit = async (data: FormValues) => {
-    setLoading(true)
+  const defaultValues = {
+    [InputNames.Login]: '',
+    [InputNames.Password]: '',
+  }
+
+  const signInFunc = async (data: FormDefaultValues) => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     console.log('Form data:', data)
-    setLoading(false)
   }
 
   return (
-    <AuthTemplate title={title}>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <fieldset className={styles.inputs}>
-          {inputs.map(({ id, name, label, placeholder, type }) => (
-            <Controller
-              key={id}
-              name={name}
-              control={control}
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  disabled={isLoading}
-                  label={label}
-                  placeholder={placeholder}
-                  validationState={errors[name] ? 'invalid' : undefined}
-                  errorMessage={errors[name]?.message}
-                  onUpdate={val => field.onChange(val)}
-                  size="xl"
-                  type={type}
-                />
-              )}
-            />
-          ))}
-        </fieldset>
-        <fieldset className={styles.controls}>
-          <Button
-            type="submit"
-            view="action"
-            size="xl"
-            width="max"
-            loading={isLoading}>
-            {submitTitle}
-          </Button>
-          <Button
-            view="outlined-action"
-            size="xl"
-            width="max"
-            onClick={() => navigate('/sign-up')}
-            loading={isLoading}>
-            {navigateTitle}
-          </Button>
-        </fieldset>
-      </form>
-    </AuthTemplate>
+    <AuthMain
+      title={title}
+      defaultValues={defaultValues}
+      submitButtonTitle={submitButtonTitle}
+      navigateButtonTitle={navigateButtonTitle}
+      navigateRoute={navigateRoute}
+      inputs={inputs}
+      mutationFn={signInFunc}
+    />
   )
 }
