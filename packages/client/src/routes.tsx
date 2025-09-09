@@ -1,5 +1,3 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
 import { AppDispatch, RootState } from './store'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
@@ -16,7 +14,7 @@ import {
   ServerErrorPage,
 } from './pages/ServerErrorPage/ServerErrorPage'
 import { StartPage, initStartPage } from './pages/StartPage'
-import { SignIn as SignInPage, SignUp as SignUpPage } from './pages/Auth'
+import { SignInPage, SignUpPage } from './pages/Auth'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
 export type PageInitContext = {
@@ -29,8 +27,6 @@ export type PageInitArgs = {
   ctx: PageInitContext
 }
 
-const queryClient = new QueryClient()
-
 export const routes = [
   {
     path: '/',
@@ -39,19 +35,11 @@ export const routes = [
   },
   {
     path: '/sign-in',
-    Component: () => (
-      <QueryClientProvider client={queryClient}>
-        <SignInPage />
-      </QueryClientProvider>
-    ),
+    Component: SignInPage,
   },
   {
     path: '/sign-up',
-    Component: () => (
-      <QueryClientProvider client={queryClient}>
-        <SignUpPage />
-      </QueryClientProvider>
-    ),
+    Component: SignUpPage,
   },
   {
     path: '/profile',

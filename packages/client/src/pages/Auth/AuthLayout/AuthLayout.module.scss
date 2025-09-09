@@ -1,4 +1,4 @@
-.section {
+.authSection {
   height: 100vh;
   background: url('../../../assets/start-page.png') no-repeat center center,
     linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-.container {
+.authContainer {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 12px;
   padding: 40px;
@@ -26,31 +26,4 @@
     text-align: center;
     line-height: 1.2;
   }
-}
-
-.form {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 30px;
-  width: 100%;
-}
-
-.fieldsetBase {
-  margin: 0;
-  padding: 0;
-  border: none;
-  display: flex;
-  width: 100%;
-  gap: 10px;
-}
-
-.inputs {
-  composes: fieldsetBase;
-  flex-direction: column;
-}
-
-.controls {
-  composes: fieldsetBase;
 }
