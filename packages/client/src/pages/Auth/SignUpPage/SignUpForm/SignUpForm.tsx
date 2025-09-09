@@ -111,7 +111,11 @@ export const SignUpForm: FC = () => {
   return (
     <form
       className={styles.signUpForm}
-      onSubmit={handleSubmit(data => signUp(data))}>
+      onSubmit={handleSubmit(data => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [SignUpInputNames.ConfirmPassword]: _, ...rest } = data
+        signUp(rest)
+      })}>
       <fieldset className={styles.signUpInputs} disabled={isLoading}>
         {inputs.map(({ id, name, label, placeholder, type }) => (
           <Controller
