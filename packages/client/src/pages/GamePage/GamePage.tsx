@@ -6,6 +6,7 @@ import { getRandomWord, getNextWord } from '../../constants/gameWords'
 import s from './GamePage.module.scss'
 import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
+import { ResultsModals } from '@components/ResultsModal/ResultsModal'
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
@@ -16,12 +17,15 @@ export const GamePage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [timeLeft, setTimeLeft] = useState<number>(60)
+  const [isShowResults, setIsShowResults] = useState(false)
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer)
+          setIsShowResults(true)
           return 0
         }
         return prev - 1
@@ -73,6 +77,7 @@ export const GamePage = () => {
 
     if (isWordCorrect) {
       setIsCorrect(true)
+      setCount(count => count + 1)
       setErrorMessage('Правильно! Переходим к следующему слову')
       setTimeout(() => {
         handleNextWord()
@@ -99,53 +104,26 @@ export const GamePage = () => {
   }
 
   return (
-    <div className={s['game-page']}>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Game</title>
-        <meta name="description" content="Страница с игрой" />
-      </Helmet>
-      <Header />
+    <>
+      <div className={s['game-page']}>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>Game</title>
+          <meta name="description" content="Страница с игрой" />
+        </Helmet>
+        <Header />
 
-      <div className={s['game-page__instructions']}>
-        <p>Нажмите на карточку, чтобы увидеть слово</p>
-        <p>Введите слово в поле ниже и нажмите "Проверить"</p>
-        <p>Слово должно быть скрыто для ввода</p>
-      </div>
+        <div className={s['game-page__instructions']}>
+          <p>Нажмите на карточку, чтобы увидеть слово</p>
+          <p>Введите слово в поле ниже и нажмите "Проверить"</p>
+          <p>Слово должно быть скрыто для ввода</p>
+        </div>
 
-      <div className={s['game-page__timer']}>
-        Осталось времени:
-        <span className={s['game-page__timer_accent']}>
-          {formatTime(timeLeft)}
-        </span>
-      </div>
-
-      <div className={s['game-page__word-card']}>
-        <WordCard
-          word={currentWord}
-          isRevealed={isWordRevealed}
-          onToggle={handleToggleWord}
-        />
-      </div>
-
-      <div className={s['game-page__input']}>
-        <div className={s['game-page__input-container']}>
-          <input
-            type="text"
-            value={inputWord}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder="Введите слово..."
-            className={s['game-page__word-input']}
-            disabled={isWordRevealed}
-          />
-          <Button
-            size="xl"
-            onClick={handleCheckWord}
-            disabled={isWordRevealed || !inputWord.trim()}
-            className={s['game-page__button']}>
-            Проверить
-          </Button>
+        <div className={s['game-page__timer']}>
+          Осталось времени:
+          <span className={s['game-page__timer_accent']}>
+            {formatTime(timeLeft)}
+          </span>
         </div>
 
         {errorMessage && (
@@ -158,17 +136,47 @@ export const GamePage = () => {
             {errorMessage}
           </div>
         )}
-      </div>
 
-      <div className={s['game-page__controls']}>
-        <Button
-          size="xl"
-          onClick={handleNextWord}
-          className={s['game-page__button']}>
-          Следующее слово
-        </Button>
+        <div className={s['game-page__word-card']}>
+          <WordCard
+            word={currentWord}
+            isRevealed={isWordRevealed}
+            onToggle={handleToggleWord}
+          />
+        </div>
+
+        <div className={s['game-page__input']}>
+          <div className={s['game-page__input-container']}>
+            <input
+              type="text"
+              value={inputWord}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder="Введите слово..."
+              className={s['game-page__word-input']}
+              disabled={isWordRevealed}
+            />
+            <Button
+              size="xl"
+              onClick={handleCheckWord}
+              disabled={isWordRevealed || !inputWord.trim()}
+              className={s['game-page__button']}>
+              Проверить
+            </Button>
+          </div>
+        </div>
+
+        <div className={s['game-page__controls']}>
+          <Button
+            size="xl"
+            onClick={handleNextWord}
+            className={s['game-page__button']}>
+            Следующее слово
+          </Button>
+        </div>
       </div>
-    </div>
+      {isShowResults && <ResultsModals count={count} />}
+    </>
   )
 }
 

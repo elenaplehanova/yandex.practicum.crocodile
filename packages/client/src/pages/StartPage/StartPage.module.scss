@@ -3,8 +3,8 @@
   grid-template-rows: min-content auto;
 
   min-height: 100vh;
-  background: url('../../assets/start-page.png') no-repeat calc(50% + 300px)
-      center,
+  background: url('../../assets/start-page.png') no-repeat calc(50% + 350px)
+      calc(50% + 100px),
     linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
     url('../../assets/background_start_game.jpg') no-repeat center center;
   background-size: 250px 250px, cover, cover;
@@ -17,12 +17,6 @@
     gap: 15px;
   }
 
-  &__header {
-    font-family: SuperBubble, fantasy;
-    text-shadow: var(--text-shadow-yellow);
-    font-size: 48px;
-    line-height: 1;
-  }
   &__button {
     --g-button-background-color: var(--g-color-base-positive-heavy, green);
     --g-button-text-color-hover: var(--g-color-base-positive-heavy, darkgreen);
@@ -33,6 +27,29 @@
       justify-content: center;
       align-items: center;
       gap: 5px;
+    }
+  }
+
+  &__instructions {
+    color: #fff;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
+
+    p {
+      margin: 10px 0;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 600;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     }
   }
 }
