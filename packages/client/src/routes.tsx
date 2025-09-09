@@ -5,7 +5,7 @@ import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { initGamePage, GamePage } from './pages/GamePage/GamePage'
 import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
-import { initProfilePage, ProfilePage } from './pages/Profile'
+import { initProfilePage, ProfilePage } from './pages/Profile/ProfilePage'
 import { initTopicPage, TopicPage } from './pages/Topic'
 import {
   initNotFoundPage,
