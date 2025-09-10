@@ -1,0 +1,26 @@
+.signInForm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.fieldsetBase {
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.signInInputs {
+  composes: fieldsetBase;
+  flex-direction: column;
+}
+
+.signInControls {
+  composes: fieldsetBase;
+}
