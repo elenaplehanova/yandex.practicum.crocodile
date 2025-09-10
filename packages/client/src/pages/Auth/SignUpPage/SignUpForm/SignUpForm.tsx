@@ -1,14 +1,20 @@
 import { type FC, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
+import InputMask from 'react-input-mask'
 import { TextInput, Button } from '@gravity-ui/uikit'
 
-import { useSignUpMutation, type ErrorResponse } from '../../../../slices/api'
+import {
+  useSignUpMutation,
+  type ErrorResponse,
+} from '../../../../slices/apiSlice'
+import { getErrorTranslation } from '../../../../utils'
 import {
   SignUpInputNames,
   type InputProps,
-  type SignUpDefaultValues,
+  type SignUpFormValues,
 } from './SignUpForm.types'
+import { VALIDATOR } from './SignUpForm.validator'
 import styles from './SignUpForm.module.scss'
 
 export const SignUpForm: FC = () => {
@@ -19,8 +25,9 @@ export const SignUpForm: FC = () => {
     control,
     handleSubmit,
     setError,
+    watch,
     formState: { errors },
-  } = useForm<SignUpDefaultValues>({
+  } = useForm<SignUpFormValues>({
     defaultValues: {
       [SignUpInputNames.Login]: '',
       [SignUpInputNames.Password]: '',
@@ -30,16 +37,20 @@ export const SignUpForm: FC = () => {
       [SignUpInputNames.Phone]: '',
       [SignUpInputNames.ConfirmPassword]: '',
     },
+    mode: 'all',
   })
 
+  const passwordValue = watch(SignUpInputNames.Password)
   const inputs: InputProps[] = useMemo(
     () => [
       {
         id: SignUpInputNames.Email,
+        autoFocus: true,
         label: 'Почта',
         name: SignUpInputNames.Email,
         placeholder: 'Введите почту',
         type: 'email',
+        rules: VALIDATOR[SignUpInputNames.Email],
       },
       {
         id: SignUpInputNames.Login,
@@ -47,6 +58,7 @@ export const SignUpForm: FC = () => {
         name: SignUpInputNames.Login,
         placeholder: 'Введите логин',
         type: 'text',
+        rules: VALIDATOR[SignUpInputNames.Login],
       },
       {
         id: SignUpInputNames.FirstName,
@@ -54,6 +66,7 @@ export const SignUpForm: FC = () => {
         name: SignUpInputNames.FirstName,
         placeholder: 'Введите имя',
         type: 'text',
+        rules: VALIDATOR[SignUpInputNames.FirstName],
       },
       {
         id: SignUpInputNames.SecondName,
@@ -61,13 +74,16 @@ export const SignUpForm: FC = () => {
         name: SignUpInputNames.SecondName,
         placeholder: 'Введите фамилию',
         type: 'text',
+        rules: VALIDATOR[SignUpInputNames.SecondName],
       },
       {
         id: SignUpInputNames.Phone,
         label: 'Телефон',
         name: SignUpInputNames.Phone,
-        placeholder: 'Введите телефон',
+        placeholder: '+7 (___) ___-__-__',
+        mask: '+7 (999) 999-99-99',
         type: 'tel',
+        rules: VALIDATOR[SignUpInputNames.Phone],
       },
       {
         id: SignUpInputNames.Password,
@@ -75,6 +91,7 @@ export const SignUpForm: FC = () => {
         name: SignUpInputNames.Password,
         placeholder: 'Введите пароль',
         type: 'password',
+        rules: VALIDATOR[SignUpInputNames.Password],
       },
       {
         id: SignUpInputNames.ConfirmPassword,
@@ -82,9 +99,10 @@ export const SignUpForm: FC = () => {
         name: SignUpInputNames.ConfirmPassword,
         placeholder: 'Введите пароль ещё раз',
         type: 'password',
+        rules: VALIDATOR[SignUpInputNames.ConfirmPassword](passwordValue),
       },
     ],
-    []
+    [passwordValue]
   )
 
   const submitButtonTitle = 'Зарегистрироваться'
@@ -97,7 +115,9 @@ export const SignUpForm: FC = () => {
       }
 
       inputs.forEach(({ name }) =>
-        setError(name, { message: (error?.data as ErrorResponse)?.reason })
+        setError(name, {
+          message: getErrorTranslation((error?.data as ErrorResponse)?.reason),
+        })
       )
     }
   }, [isError, error, inputs])
@@ -117,25 +137,57 @@ export const SignUpForm: FC = () => {
         signUp(rest)
       })}>
       <fieldset className={styles.signUpInputs} disabled={isLoading}>
-        {inputs.map(({ id, name, label, placeholder, type }) => (
-          <Controller
-            key={id}
-            name={name}
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                {...field}
-                label={label}
-                placeholder={placeholder}
-                validationState={errors[name] ? 'invalid' : undefined}
-                errorMessage={errors[name]?.message}
-                onUpdate={val => field.onChange(val)}
-                type={type}
-                size="xl"
-              />
-            )}
-          />
-        ))}
+        {inputs.map(
+          ({ id, autoFocus, name, label, mask, placeholder, type, rules }) => (
+            <Controller
+              key={id}
+              name={name}
+              control={control}
+              rules={rules}
+              render={({ field }) => {
+                if (name === SignUpInputNames.Phone) {
+                  return (
+                    <InputMask
+                      mask={mask ?? ''}
+                      value={field.value}
+                      onChange={e => {
+                        const normalized = e.target.value.replace(/\D/g, '')
+                        field.onChange(normalized)
+                      }}
+                      onBlur={field.onBlur}>
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {(inputProps: any) => (
+                        <TextInput
+                          {...inputProps}
+                          label={label}
+                          placeholder={placeholder}
+                          validationState={errors[name] ? 'invalid' : undefined}
+                          errorMessage={errors[name]?.message}
+                          type={type}
+                          size="xl"
+                        />
+                      )}
+                    </InputMask>
+                  )
+                }
+
+                return (
+                  <TextInput
+                    {...field}
+                    autoFocus={autoFocus}
+                    label={label}
+                    placeholder={placeholder}
+                    validationState={errors[name] ? 'invalid' : undefined}
+                    errorMessage={errors[name]?.message}
+                    onUpdate={val => field.onChange(val)}
+                    type={type}
+                    size="xl"
+                  />
+                )
+              }}
+            />
+          )
+        )}
       </fieldset>
       <fieldset className={styles.signUpControls}>
         <Button

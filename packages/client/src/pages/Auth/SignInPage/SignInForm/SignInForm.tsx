@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { TextInput, Button } from '@gravity-ui/uikit'
 
-import { useSignInMutation, type ErrorResponse } from '../../../../slices/api'
+import {
+  useSignInMutation,
+  type ErrorResponse,
+} from '../../../../slices/apiSlice'
+import { getErrorTranslation } from '../../../../utils'
 import {
   SignInInputNames,
   type InputProps,
-  type SignInDefaultValues,
+  type SignInFormValues,
 } from './SignInForm.types'
+import { VALIDATOR } from './SignInForm.validator'
 import styles from './SignInForm.module.scss'
 
 export const SignInForm: FC = () => {
@@ -20,21 +25,24 @@ export const SignInForm: FC = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<SignInDefaultValues>({
+  } = useForm<SignInFormValues>({
     defaultValues: {
       [SignInInputNames.Login]: '',
       [SignInInputNames.Password]: '',
     },
+    mode: 'all',
   })
 
   const inputs: InputProps[] = useMemo(
     () => [
       {
         id: SignInInputNames.Login,
+        autoFocus: true,
         label: 'Логин',
         name: SignInInputNames.Login,
         placeholder: 'Введите логин',
         type: 'text',
+        rules: VALIDATOR[SignInInputNames.Login],
       },
       {
         id: SignInInputNames.Password,
@@ -42,6 +50,7 @@ export const SignInForm: FC = () => {
         name: SignInInputNames.Password,
         placeholder: 'Введите пароль',
         type: 'password',
+        rules: VALIDATOR[SignInInputNames.Password],
       },
     ],
     []
@@ -58,7 +67,7 @@ export const SignInForm: FC = () => {
 
       inputs.forEach(({ name }) =>
         setError(name, {
-          message: (error?.data as ErrorResponse)?.reason,
+          message: getErrorTranslation((error?.data as ErrorResponse)?.reason),
         })
       )
     }
@@ -75,25 +84,29 @@ export const SignInForm: FC = () => {
       className={styles.signInForm}
       onSubmit={handleSubmit(data => signIn(data))}>
       <fieldset className={styles.signInInputs} disabled={isLoading}>
-        {inputs.map(({ id, name, label, placeholder, type }) => (
-          <Controller
-            key={id}
-            name={name}
-            control={control}
-            render={({ field }) => (
-              <TextInput
-                {...field}
-                label={label}
-                placeholder={placeholder}
-                validationState={errors[name] ? 'invalid' : undefined}
-                errorMessage={errors[name]?.message}
-                onUpdate={val => field.onChange(val)}
-                type={type}
-                size="xl"
-              />
-            )}
-          />
-        ))}
+        {inputs.map(
+          ({ id, autoFocus, name, label, placeholder, type, rules }) => (
+            <Controller
+              key={id}
+              name={name}
+              control={control}
+              rules={rules}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  autoFocus={autoFocus}
+                  label={label}
+                  placeholder={placeholder}
+                  validationState={errors[name] ? 'invalid' : undefined}
+                  errorMessage={errors[name]?.message}
+                  onUpdate={val => field.onChange(val)}
+                  type={type}
+                  size="xl"
+                />
+              )}
+            />
+          )
+        )}
       </fieldset>
       <fieldset className={styles.signInControls}>
         <Button
