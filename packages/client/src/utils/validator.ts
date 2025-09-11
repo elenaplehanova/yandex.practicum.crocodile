@@ -1,7 +1,15 @@
-import { SignUpInputNames, type Validator } from './SignUpForm.types'
+export enum InputNames {
+  Login = 'login',
+  Password = 'password',
+  Email = 'email',
+  FirstName = 'first_name',
+  SecondName = 'second_name',
+  Phone = 'phone',
+  ConfirmPassword = 'confirm_password',
+}
 
-export const VALIDATOR: Validator = {
-  [SignUpInputNames.Login]: {
+export const VALIDATOR = {
+  [InputNames.Login]: {
     required: 'Введите логин',
     pattern: {
       value: /^(?!\d+$)[A-Za-z0-9_-]+$/,
@@ -18,7 +26,7 @@ export const VALIDATOR: Validator = {
       message: 'Логин максимум 20 символов',
     },
   },
-  [SignUpInputNames.Password]: {
+  [InputNames.Password]: {
     required: 'Введите пароль',
     pattern: {
       value: /^(?=.*[A-Z])(?=.*\d).+$/,
@@ -35,12 +43,12 @@ export const VALIDATOR: Validator = {
       message: 'Пароль максимум 40 символов',
     },
   },
-  [SignUpInputNames.ConfirmPassword]: (passwordValue: string) => ({
+  [InputNames.ConfirmPassword]: (passwordValue: string) => ({
     required: 'Введите пароль еще раз',
     validate: (value: string) =>
       value === passwordValue || 'Пароли не совпадают',
   }),
-  [SignUpInputNames.FirstName]: {
+  [InputNames.FirstName]: {
     required: 'Введите имя',
     pattern: {
       value: /^[A-ZА-ЯЁ][a-zа-яё-]*$/,
@@ -48,7 +56,7 @@ export const VALIDATOR: Validator = {
         'Имя должно состоять из букв или дефиса и начинаться с заглавной буквы',
     },
   },
-  [SignUpInputNames.SecondName]: {
+  [InputNames.SecondName]: {
     required: 'Введите фамилию',
     pattern: {
       value: /^[A-ZА-ЯЁ][a-zа-яё-]*$/,
@@ -56,14 +64,14 @@ export const VALIDATOR: Validator = {
         'Фамилия должна состоять из букв или дефиса и начинаться с заглавной буквы',
     },
   },
-  [SignUpInputNames.Email]: {
+  [InputNames.Email]: {
     required: 'Введите почту',
     pattern: {
       value: /^((?!\.)[\w.-]*[^.])@([\w-]+\.)+[\w-]{2,4}$/,
       message: 'Введите корректный адрес почты',
     },
   },
-  [SignUpInputNames.Phone]: {
+  [InputNames.Phone]: {
     required: 'Введите номер телефона',
     pattern: {
       value: /^(\+7|7|8)\d{10}$/,

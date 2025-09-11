@@ -7,13 +7,8 @@ import {
   useSignInMutation,
   type ErrorResponse,
 } from '../../../../slices/apiSlice'
-import { getErrorTranslation } from '../../../../utils'
-import {
-  SignInInputNames,
-  type InputProps,
-  type SignInFormValues,
-} from './SignInForm.types'
-import { VALIDATOR } from './SignInForm.validator'
+import { getErrorTranslation, InputNames, VALIDATOR } from '../../../../utils'
+import type { InputProps, SignInFormValues } from './SignInForm.types'
 import styles from './SignInForm.module.scss'
 
 export const SignInForm: FC = () => {
@@ -27,8 +22,8 @@ export const SignInForm: FC = () => {
     formState: { errors },
   } = useForm<SignInFormValues>({
     defaultValues: {
-      [SignInInputNames.Login]: '',
-      [SignInInputNames.Password]: '',
+      [InputNames.Login]: '',
+      [InputNames.Password]: '',
     },
     mode: 'all',
   })
@@ -36,21 +31,21 @@ export const SignInForm: FC = () => {
   const inputs: InputProps[] = useMemo(
     () => [
       {
-        id: SignInInputNames.Login,
+        id: InputNames.Login,
         autoFocus: true,
         label: 'Логин',
-        name: SignInInputNames.Login,
+        name: InputNames.Login,
         placeholder: 'Введите логин',
         type: 'text',
-        rules: VALIDATOR[SignInInputNames.Login],
+        rules: VALIDATOR[InputNames.Login],
       },
       {
-        id: SignInInputNames.Password,
+        id: InputNames.Password,
         label: 'Пароль',
-        name: SignInInputNames.Password,
+        name: InputNames.Password,
         placeholder: 'Введите пароль',
         type: 'password',
-        rules: VALIDATOR[SignInInputNames.Password],
+        rules: VALIDATOR[InputNames.Password],
       },
     ],
     []

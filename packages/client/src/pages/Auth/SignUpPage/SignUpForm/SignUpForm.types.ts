@@ -1,23 +1,17 @@
 import type { RegisterOptions } from 'react-hook-form'
 
-export enum SignUpInputNames {
-  Login = 'login',
-  Password = 'password',
-  Email = 'email',
-  FirstName = 'first_name',
-  SecondName = 'second_name',
-  Phone = 'phone',
-  ConfirmPassword = 'confirm_password',
-}
+import { InputNames } from '../../../../utils'
+
+type SignUpInputNames = InputNames
 
 export interface SignUpFormValues {
-  [SignUpInputNames.Login]: string
-  [SignUpInputNames.Password]: string
-  [SignUpInputNames.Email]: string
-  [SignUpInputNames.FirstName]: string
-  [SignUpInputNames.SecondName]: string
-  [SignUpInputNames.Phone]: string
-  [SignUpInputNames.ConfirmPassword]: string
+  [InputNames.Login]: string
+  [InputNames.Password]: string
+  [InputNames.Email]: string
+  [InputNames.FirstName]: string
+  [InputNames.SecondName]: string
+  [InputNames.Phone]: string
+  [InputNames.ConfirmPassword]: string
 }
 
 export interface InputProps {
@@ -29,34 +23,4 @@ export interface InputProps {
   rules?: RegisterOptions<SignUpFormValues, SignUpInputNames>
   mask?: string
   autoFocus?: boolean
-}
-
-export type Validator = {
-  [SignUpInputNames.Login]: RegisterOptions<
-    SignUpFormValues,
-    SignUpInputNames.Login
-  >
-  [SignUpInputNames.Password]: RegisterOptions<
-    SignUpFormValues,
-    SignUpInputNames.Password
-  >
-  [SignUpInputNames.Email]: RegisterOptions<
-    SignUpFormValues,
-    SignUpInputNames.Email
-  >
-  [SignUpInputNames.FirstName]: RegisterOptions<
-    SignUpFormValues,
-    SignUpInputNames.FirstName
-  >
-  [SignUpInputNames.SecondName]: RegisterOptions<
-    SignUpFormValues,
-    SignUpInputNames.SecondName
-  >
-  [SignUpInputNames.Phone]: RegisterOptions<
-    SignUpFormValues,
-    SignUpInputNames.Phone
-  >
-  [SignUpInputNames.ConfirmPassword]: (
-    value: string
-  ) => RegisterOptions<SignUpFormValues, SignUpInputNames.ConfirmPassword>
 }

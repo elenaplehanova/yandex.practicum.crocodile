@@ -8,13 +8,8 @@ import {
   useSignUpMutation,
   type ErrorResponse,
 } from '../../../../slices/apiSlice'
-import { getErrorTranslation } from '../../../../utils'
-import {
-  SignUpInputNames,
-  type InputProps,
-  type SignUpFormValues,
-} from './SignUpForm.types'
-import { VALIDATOR } from './SignUpForm.validator'
+import { getErrorTranslation, InputNames, VALIDATOR } from '../../../../utils'
+import type { InputProps, SignUpFormValues } from './SignUpForm.types'
 import styles from './SignUpForm.module.scss'
 
 export const SignUpForm: FC = () => {
@@ -29,77 +24,77 @@ export const SignUpForm: FC = () => {
     formState: { errors },
   } = useForm<SignUpFormValues>({
     defaultValues: {
-      [SignUpInputNames.Login]: '',
-      [SignUpInputNames.Password]: '',
-      [SignUpInputNames.Email]: '',
-      [SignUpInputNames.FirstName]: '',
-      [SignUpInputNames.SecondName]: '',
-      [SignUpInputNames.Phone]: '',
-      [SignUpInputNames.ConfirmPassword]: '',
+      [InputNames.Login]: '',
+      [InputNames.Password]: '',
+      [InputNames.Email]: '',
+      [InputNames.FirstName]: '',
+      [InputNames.SecondName]: '',
+      [InputNames.Phone]: '',
+      [InputNames.ConfirmPassword]: '',
     },
     mode: 'all',
   })
 
-  const passwordValue = watch(SignUpInputNames.Password)
+  const passwordValue = watch(InputNames.Password)
   const inputs: InputProps[] = useMemo(
     () => [
       {
-        id: SignUpInputNames.Email,
+        id: InputNames.Email,
         autoFocus: true,
         label: 'Почта',
-        name: SignUpInputNames.Email,
+        name: InputNames.Email,
         placeholder: 'Введите почту',
         type: 'email',
-        rules: VALIDATOR[SignUpInputNames.Email],
+        rules: VALIDATOR[InputNames.Email],
       },
       {
-        id: SignUpInputNames.Login,
+        id: InputNames.Login,
         label: 'Логин',
-        name: SignUpInputNames.Login,
+        name: InputNames.Login,
         placeholder: 'Введите логин',
         type: 'text',
-        rules: VALIDATOR[SignUpInputNames.Login],
+        rules: VALIDATOR[InputNames.Login],
       },
       {
-        id: SignUpInputNames.FirstName,
+        id: InputNames.FirstName,
         label: 'Имя',
-        name: SignUpInputNames.FirstName,
+        name: InputNames.FirstName,
         placeholder: 'Введите имя',
         type: 'text',
-        rules: VALIDATOR[SignUpInputNames.FirstName],
+        rules: VALIDATOR[InputNames.FirstName],
       },
       {
-        id: SignUpInputNames.SecondName,
+        id: InputNames.SecondName,
         label: 'Фамилия',
-        name: SignUpInputNames.SecondName,
+        name: InputNames.SecondName,
         placeholder: 'Введите фамилию',
         type: 'text',
-        rules: VALIDATOR[SignUpInputNames.SecondName],
+        rules: VALIDATOR[InputNames.SecondName],
       },
       {
-        id: SignUpInputNames.Phone,
+        id: InputNames.Phone,
         label: 'Телефон',
-        name: SignUpInputNames.Phone,
+        name: InputNames.Phone,
         placeholder: '+7 (___) ___-__-__',
         mask: '+7 (999) 999-99-99',
         type: 'tel',
-        rules: VALIDATOR[SignUpInputNames.Phone],
+        rules: VALIDATOR[InputNames.Phone],
       },
       {
-        id: SignUpInputNames.Password,
+        id: InputNames.Password,
         label: 'Пароль',
-        name: SignUpInputNames.Password,
+        name: InputNames.Password,
         placeholder: 'Введите пароль',
         type: 'password',
-        rules: VALIDATOR[SignUpInputNames.Password],
+        rules: VALIDATOR[InputNames.Password],
       },
       {
-        id: SignUpInputNames.ConfirmPassword,
+        id: InputNames.ConfirmPassword,
         label: 'Пароль (ещё раз)',
-        name: SignUpInputNames.ConfirmPassword,
+        name: InputNames.ConfirmPassword,
         placeholder: 'Введите пароль ещё раз',
         type: 'password',
-        rules: VALIDATOR[SignUpInputNames.ConfirmPassword](passwordValue),
+        rules: VALIDATOR[InputNames.ConfirmPassword](passwordValue),
       },
     ],
     [passwordValue]
@@ -133,7 +128,7 @@ export const SignUpForm: FC = () => {
       className={styles.signUpForm}
       onSubmit={handleSubmit(data => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [SignUpInputNames.ConfirmPassword]: _, ...rest } = data
+        const { [InputNames.ConfirmPassword]: _, ...rest } = data
         signUp(rest)
       })}>
       <fieldset className={styles.signUpInputs} disabled={isLoading}>
@@ -145,7 +140,7 @@ export const SignUpForm: FC = () => {
               control={control}
               rules={rules}
               render={({ field }) => {
-                if (name === SignUpInputNames.Phone) {
+                if (name === InputNames.Phone) {
                   return (
                     <InputMask
                       mask={mask ?? ''}

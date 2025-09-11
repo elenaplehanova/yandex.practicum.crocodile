@@ -1,13 +1,12 @@
 import type { RegisterOptions } from 'react-hook-form'
 
-export enum SignInInputNames {
-  Login = 'login',
-  Password = 'password',
-}
+import { InputNames } from '../../../../utils'
+
+type SignInInputNames = InputNames.Login | InputNames.Password
 
 export interface SignInFormValues {
-  [SignInInputNames.Login]: string
-  [SignInInputNames.Password]: string
+  [InputNames.Login]: string
+  [InputNames.Password]: string
 }
 
 export interface InputProps {
@@ -18,8 +17,4 @@ export interface InputProps {
   placeholder: string
   type?: 'number' | 'search' | 'text' | 'password' | 'email' | 'tel' | 'url'
   rules?: RegisterOptions<SignInFormValues, SignInInputNames>
-}
-
-export type Validator = {
-  [K in keyof SignInFormValues]: RegisterOptions<SignInFormValues, K>
 }
