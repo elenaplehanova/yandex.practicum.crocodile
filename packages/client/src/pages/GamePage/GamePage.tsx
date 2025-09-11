@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { usePage } from '../../hooks/usePage'
 import WordCard from '../../components/WordCard'
-import { Button } from '@gravity-ui/uikit'
+import { Button, Modal } from '@gravity-ui/uikit'
 import { getRandomWord, getNextWord } from '../../constants/gameWords'
 import s from './GamePage.module.scss'
 import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
-import { ResultsModals } from '@components/ResultsModal/ResultsModal'
+import { ResultsModal } from '@components/ResultsModal/ResultsModal'
+import { useNavigate } from 'react-router-dom'
+
+export type PlayedWords = {
+  word: string
+  guessed: boolean
+}
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
+  const navigate = useNavigate()
 
   const [currentWord, setCurrentWord] = useState<string>('')
   const [isWordRevealed, setIsWordRevealed] = useState<boolean>(false)
@@ -18,7 +25,7 @@ export const GamePage = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [timeLeft, setTimeLeft] = useState<number>(60)
   const [isShowResults, setIsShowResults] = useState(false)
-  const [count, setCount] = useState(0)
+  const [playedWords, setPlayedWords] = useState<PlayedWords[]>([])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -77,11 +84,14 @@ export const GamePage = () => {
 
     if (isWordCorrect) {
       setIsCorrect(true)
-      setCount(count => count + 1)
+      setPlayedWords(playedWords => [
+        ...playedWords,
+        { word: currentWord, guessed: true },
+      ])
       setErrorMessage('Правильно! Переходим к следующему слову')
       setTimeout(() => {
-        handleNextWord()
-      }, 1500)
+        showNextWord()
+      }, 700)
     } else {
       setIsCorrect(false)
       setErrorMessage('Неправильное слово')
@@ -94,13 +104,21 @@ export const GamePage = () => {
     }
   }
 
-  const handleNextWord = () => {
+  const showNextWord = () => {
     const nextWord = getNextWord(currentWord)
     setCurrentWord(nextWord)
     setIsWordRevealed(false)
     setInputWord('')
     setErrorMessage('')
     setIsCorrect(null)
+  }
+
+  const handleNextWord = () => {
+    showNextWord()
+    setPlayedWords(playedWords => [
+      ...playedWords,
+      { word: currentWord, guessed: false },
+    ])
   }
 
   return (
@@ -175,7 +193,14 @@ export const GamePage = () => {
           </Button>
         </div>
       </div>
-      {isShowResults && <ResultsModals count={count} />}
+      <Modal
+        open={isShowResults}
+        onClose={() => {
+          setIsShowResults(false)
+          navigate('/start')
+        }}>
+        <ResultsModal playedWords={playedWords} />
+      </Modal>
     </>
   )
 }
