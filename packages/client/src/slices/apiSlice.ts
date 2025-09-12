@@ -26,8 +26,8 @@ const PROTOCOL_HTTPS = 'https://'
 const DOMAIN = 'ya-praktikum.tech'
 const API_BASE_URL = `${PROTOCOL_HTTPS}${DOMAIN}/api`
 const API_VERSION = 'v2'
-export const API_URL = `${API_BASE_URL}/${API_VERSION}`
 
+const API_URL = `${API_BASE_URL}/${API_VERSION}`
 const AUTH_URL = '/auth'
 
 export const api = createApi({
