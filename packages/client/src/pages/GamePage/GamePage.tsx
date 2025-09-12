@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { usePage } from '../../hooks/usePage'
 import WordCard from '../../components/WordCard'
 import { Button } from '@gravity-ui/uikit'
@@ -8,11 +9,18 @@ import s from './GamePage.module.scss'
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
 
+  const navigate = useNavigate()
+
   const [currentWord, setCurrentWord] = useState<string>('')
   const [isWordRevealed, setIsWordRevealed] = useState<boolean>(false)
   const [inputWord, setInputWord] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+
+  // Состояния игры
+  const [gameState, setGameState] = useState<
+    'waiting' | 'ready' | 'playing' | 'finished'
+  >('waiting')
 
   useEffect(() => {
     const initialWord = getRandomWord()
@@ -20,7 +28,15 @@ export const GamePage = () => {
   }, [])
 
   const handleToggleWord = () => {
-    setIsWordRevealed(!isWordRevealed)
+    if (gameState === 'waiting') {
+      setIsWordRevealed(true)
+      setGameState('ready')
+    } else if (gameState === 'ready') {
+      setGameState('playing')
+    } else if (gameState === 'playing') {
+      setIsWordRevealed(prev => !prev)
+      setGameState('playing')
+    }
     setErrorMessage('')
     setIsCorrect(null)
   }
@@ -39,8 +55,8 @@ export const GamePage = () => {
       return
     }
 
-    if (isWordRevealed) {
-      setErrorMessage('Сначала скройте слово на карточке')
+    if (gameState !== 'playing' || isWordRevealed) {
+      setErrorMessage('Дождитесь начала игры')
       setIsCorrect(false)
       return
     }
@@ -50,10 +66,14 @@ export const GamePage = () => {
 
     if (isWordCorrect) {
       setIsCorrect(true)
-      setErrorMessage('Правильно! Переходим к следующему слову')
+      setErrorMessage('Правильно! Игра завершена')
       setTimeout(() => {
-        handleNextWord()
-      }, 1500)
+        // Переходим на экран завершения игры
+        setIsWordRevealed(false)
+        setInputWord('')
+        setIsCorrect(null)
+        setGameState('finished')
+      }, 1200)
     } else {
       setIsCorrect(false)
       setErrorMessage('Неправильное слово')
@@ -69,72 +89,127 @@ export const GamePage = () => {
   const handleNextWord = () => {
     const nextWord = getNextWord(currentWord)
     setCurrentWord(nextWord)
-    setIsWordRevealed(false)
-    setInputWord('')
-    setErrorMessage('')
-    setIsCorrect(null)
   }
+
+  const isInputDisabled = !(gameState === 'playing' && !isWordRevealed)
+
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  useEffect(() => {
+    if (!isInputDisabled) {
+      inputRef.current?.focus()
+    }
+  }, [isInputDisabled])
 
   return (
     <div className={s['game-page']}>
       <div className={s['game-page__header']}>
         <h1 className={s['game-page__title']}>CROCODILE</h1>
       </div>
-
       <div className={s['game-page__instructions']}>
-        <p>Нажмите на карточку, чтобы увидеть слово</p>
-        <p>Введите слово в поле ниже и нажмите "Проверить"</p>
-        <p>Слово должно быть скрыто для ввода</p>
+        {gameState === 'waiting' && (
+          <p>Нажмите на карточку, когда будете готовы показать слово</p>
+        )}
+        {gameState === 'ready' && (
+          <p>
+            Изучите слово. Нажмите "Следующее слово" для нового слова или
+            нажмите на карточку для начала игры
+          </p>
+        )}
+        {gameState === 'playing' && (
+          <>
+            <p>Ведущий показывает слово пантомимой</p>
+            <p>Нажмите на карточку, чтобы скрыть слово и начать ввод ответов</p>
+          </>
+        )}
+        {gameState === 'finished' && <p>Игра завершена</p>}
       </div>
 
-      <div className={s['game-page__word-card']}>
-        <WordCard
-          word={currentWord}
-          isRevealed={isWordRevealed}
-          onToggle={handleToggleWord}
-        />
-      </div>
-
-      <div className={s['game-page__input']}>
-        <div className={s['game-page__input-container']}>
-          <input
-            type="text"
-            value={inputWord}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder="Введите слово..."
-            className={s['game-page__word-input']}
-            disabled={isWordRevealed}
+      {gameState !== 'finished' && (
+        <div className={s['game-page__word-card']}>
+          <WordCard
+            word={currentWord}
+            isRevealed={isWordRevealed}
+            onToggle={handleToggleWord}
           />
+        </div>
+      )}
+
+      {gameState === 'playing' && (
+        <div className={s['game-page__input']}>
+          <div className={s['game-page__input-container']}>
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputWord}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder="Введите слово..."
+              className={s['game-page__word-input']}
+              disabled={isInputDisabled}
+            />
+            <Button
+              size="xl"
+              onClick={handleCheckWord}
+              disabled={isInputDisabled || !inputWord.trim()}
+              className={s['game-page__button']}>
+              Проверить
+            </Button>
+          </div>
+
+          {errorMessage && (
+            <div
+              className={`${s['game-page__message']} ${
+                isCorrect
+                  ? s['game-page__message--success']
+                  : s['game-page__message--error']
+              }`}>
+              {errorMessage}
+            </div>
+          )}
+        </div>
+      )}
+
+      {gameState === 'ready' && (
+        <div className={s['game-page__controls']}>
           <Button
             size="xl"
-            onClick={handleCheckWord}
-            disabled={isWordRevealed || !inputWord.trim()}
+            onClick={handleNextWord}
             className={s['game-page__button']}>
-            Проверить
+            Следующее слово
           </Button>
         </div>
+      )}
 
-        {errorMessage && (
-          <div
-            className={`${s['game-page__message']} ${
-              isCorrect
-                ? s['game-page__message--success']
-                : s['game-page__message--error']
-            }`}>
-            {errorMessage}
+      {gameState === 'finished' && (
+        <div className={s['game-page__finish']}>
+          <div className={s['game-page__finish-window']}>
+            <div className={s['game-page__finish-actions']}>
+              <Button
+                size="xl"
+                view="outlined"
+                onClick={() => {
+                  const nextWord = getRandomWord()
+                  setCurrentWord(nextWord)
+                  setIsWordRevealed(false)
+                  setInputWord('')
+                  setErrorMessage('')
+                  setIsCorrect(null)
+                  setGameState('waiting')
+                }}
+                className={s['game-page__button']}>
+                Начать заново
+              </Button>
+              <Button
+                size="xl"
+                view="action"
+                onClick={() => navigate('/')}
+                className={s['game-page__button']}>
+                Главное меню
+              </Button>
+            </div>
           </div>
-        )}
-      </div>
-
-      <div className={s['game-page__controls']}>
-        <Button
-          size="xl"
-          onClick={handleNextWord}
-          className={s['game-page__button']}>
-          Следующее слово
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   )
 }
