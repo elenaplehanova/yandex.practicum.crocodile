@@ -13,11 +13,37 @@ export const GamePage = () => {
   const [inputWord, setInputWord] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
 
   useEffect(() => {
     const initialWord = getRandomWord()
     setCurrentWord(initialWord)
   }, [])
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [])
+
+  const handleToggleFullscreen = () => {
+    if (isFullscreen) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      }
+    } else {
+      const element = document.documentElement
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+      }
+    }
+  }
 
   const handleToggleWord = () => {
     setIsWordRevealed(!isWordRevealed)
@@ -79,6 +105,14 @@ export const GamePage = () => {
     <div className={s['game-page']}>
       <div className={s['game-page__header']}>
         <h1 className={s['game-page__title']}>CROCODILE</h1>
+        <Button
+          size="xl"
+          onClick={handleToggleFullscreen}
+          className={s['game-page__toggle-fullscreen-button']}>
+          {isFullscreen
+            ? 'Выход из полноэкранного режима'
+            : 'Полноэкранный режим'}
+        </Button>
       </div>
 
       <div className={s['game-page__instructions']}>
