@@ -158,7 +158,6 @@ export const GamePage = () => {
         <Header />
 
         <div className={s['game-page__header']}>
-          <h1 className={s['game-page__title']}>CROCODILE</h1>
           <Button
             size="xl"
             onClick={handleToggleFullscreen}

@@ -163,4 +163,12 @@
       margin-left: 10px;
     }
   }
+
+  &__header {
+    display: flex;
+  }
+
+  &__toggle-fullscreen-button {
+    margin: 10px 10px 10px auto;
+  }
 }

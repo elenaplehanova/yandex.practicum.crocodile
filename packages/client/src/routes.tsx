@@ -1,4 +1,3 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppDispatch, RootState } from './store'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
