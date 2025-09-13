@@ -1,21 +1,17 @@
-export enum SignUpInputNames {
-  Login = 'login',
-  Password = 'password',
-  Email = 'email',
-  FirstName = 'first_name',
-  SecondName = 'second_name',
-  Phone = 'phone',
-  ConfirmPassword = 'confirm_password',
-}
+import type { RegisterOptions } from 'react-hook-form'
 
-export interface SignUpDefaultValues {
-  [SignUpInputNames.Login]: string
-  [SignUpInputNames.Password]: string
-  [SignUpInputNames.Email]: string
-  [SignUpInputNames.FirstName]: string
-  [SignUpInputNames.SecondName]: string
-  [SignUpInputNames.Phone]: string
-  [SignUpInputNames.ConfirmPassword]: string
+import { InputNames } from '../../../../utils'
+
+type SignUpInputNames = InputNames
+
+export interface SignUpFormValues {
+  [InputNames.Login]: string
+  [InputNames.Password]: string
+  [InputNames.Email]: string
+  [InputNames.FirstName]: string
+  [InputNames.SecondName]: string
+  [InputNames.Phone]: string
+  [InputNames.ConfirmPassword]: string
 }
 
 export interface InputProps {
@@ -24,4 +20,7 @@ export interface InputProps {
   label: string
   placeholder: string
   type?: 'number' | 'search' | 'text' | 'password' | 'email' | 'tel' | 'url'
+  rules?: RegisterOptions<SignUpFormValues, SignUpInputNames>
+  mask?: string
+  autoFocus?: boolean
 }
