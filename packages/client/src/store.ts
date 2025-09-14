@@ -13,6 +13,7 @@ import userReducer from './slices/userSlice'
 import gameReducer from './slices/gameSlice'
 import { api } from './slices/api'
 
+
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
 declare global {

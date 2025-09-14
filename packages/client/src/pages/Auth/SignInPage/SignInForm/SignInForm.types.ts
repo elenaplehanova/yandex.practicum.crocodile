@@ -1,17 +1,20 @@
-export enum SignInInputNames {
-  Login = 'login',
-  Password = 'password',
-}
+import type { RegisterOptions } from 'react-hook-form'
 
-export interface SignInDefaultValues {
-  [SignInInputNames.Login]: string
-  [SignInInputNames.Password]: string
+import { InputNames } from '../../../../utils'
+
+type SignInInputNames = InputNames.Login | InputNames.Password
+
+export interface SignInFormValues {
+  [InputNames.Login]: string
+  [InputNames.Password]: string
 }
 
 export interface InputProps {
+  autoFocus?: boolean
   name: SignInInputNames
   id: SignInInputNames
   label: string
   placeholder: string
   type?: 'number' | 'search' | 'text' | 'password' | 'email' | 'tel' | 'url'
+  rules?: RegisterOptions<SignInFormValues, SignInInputNames>
 }
