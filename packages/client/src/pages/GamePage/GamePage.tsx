@@ -1,97 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePage } from '../../hooks/usePage'
+import { useGameStatus } from '../../hooks/useGameStatus'
 import WordCard from '../../components/WordCard'
 import { Button } from '@gravity-ui/uikit'
-import { getRandomWord, getNextWord } from '../../constants/gameWords'
 import s from './GamePage.module.scss'
 
+const initGame = () => Promise.resolve()
+
 export const GamePage = () => {
-  usePage({ initPage: initGamePage })
+  usePage({ initPage: initGame })
 
   const navigate = useNavigate()
-
-  const [currentWord, setCurrentWord] = useState<string>('')
-  const [isWordRevealed, setIsWordRevealed] = useState<boolean>(false)
-  const [inputWord, setInputWord] = useState<string>('')
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
-
-  // Состояния игры
-  const [gameState, setGameState] = useState<
-    'waiting' | 'ready' | 'playing' | 'finished'
-  >('waiting')
+  const {
+    currentWord,
+    gameState,
+    isWordRevealed,
+    inputWord,
+    errorMessage,
+    isCorrect,
+    isInputDisabled,
+    onInitGame,
+    onToggleWord,
+    onInputChange,
+    onCheckWord,
+    onNextWord,
+    onReset,
+    onStartNewGame,
+    onFinishGame,
+  } = useGameStatus()
 
   useEffect(() => {
-    const initialWord = getRandomWord()
-    setCurrentWord(initialWord)
-  }, [])
-
-  const handleToggleWord = () => {
-    if (gameState === 'waiting') {
-      setIsWordRevealed(true)
-      setGameState('ready')
-    } else if (gameState === 'ready') {
-      setGameState('playing')
-    } else if (gameState === 'playing') {
-      setIsWordRevealed(prev => !prev)
-      setGameState('playing')
-    }
-    setErrorMessage('')
-    setIsCorrect(null)
-  }
+    onInitGame()
+  }, [onInitGame])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setInputWord(value)
-    setErrorMessage('')
-    setIsCorrect(null)
+    onInputChange(e.target.value)
   }
 
   const handleCheckWord = () => {
-    if (!inputWord.trim()) {
-      setErrorMessage('Введите слово')
-      setIsCorrect(false)
-      return
-    }
-
-    if (gameState !== 'playing' || isWordRevealed) {
-      setErrorMessage('Дождитесь начала игры')
-      setIsCorrect(false)
-      return
-    }
-
-    const isWordCorrect =
-      inputWord.trim().toLowerCase() === currentWord.toLowerCase()
-
-    if (isWordCorrect) {
-      setIsCorrect(true)
-      setErrorMessage('Правильно! Игра завершена')
-      setTimeout(() => {
-        // Переходим на экран завершения игры
-        setIsWordRevealed(false)
-        setInputWord('')
-        setIsCorrect(null)
-        setGameState('finished')
-      }, 1200)
-    } else {
-      setIsCorrect(false)
-      setErrorMessage('Неправильное слово')
-    }
+    onCheckWord()
   }
+
+  useEffect(() => {
+    if (isCorrect === true) {
+      const timer = setTimeout(() => {
+        onFinishGame()
+      }, 1200)
+
+      return () => clearTimeout(timer)
+    }
+  }, [isCorrect, onFinishGame])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleCheckWord()
     }
   }
-
-  const handleNextWord = () => {
-    const nextWord = getNextWord(currentWord)
-    setCurrentWord(nextWord)
-  }
-
-  const isInputDisabled = !(gameState === 'playing' && !isWordRevealed)
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   useEffect(() => {
@@ -129,7 +94,7 @@ export const GamePage = () => {
           <WordCard
             word={currentWord}
             isRevealed={isWordRevealed}
-            onToggle={handleToggleWord}
+            onToggle={onToggleWord}
           />
         </div>
       )}
@@ -173,7 +138,7 @@ export const GamePage = () => {
         <div className={s['game-page__controls']}>
           <Button
             size="xl"
-            onClick={handleNextWord}
+            onClick={onNextWord}
             className={s['game-page__button']}>
             Следующее слово
           </Button>
@@ -187,15 +152,7 @@ export const GamePage = () => {
               <Button
                 size="xl"
                 view="outlined"
-                onClick={() => {
-                  const nextWord = getRandomWord()
-                  setCurrentWord(nextWord)
-                  setIsWordRevealed(false)
-                  setInputWord('')
-                  setErrorMessage('')
-                  setIsCorrect(null)
-                  setGameState('waiting')
-                }}
+                onClick={onStartNewGame}
                 className={s['game-page__button']}>
                 Начать заново
               </Button>
@@ -213,5 +170,3 @@ export const GamePage = () => {
     </div>
   )
 }
-
-export const initGamePage = () => Promise.resolve()
