@@ -20,6 +20,7 @@ export const GamePage = () => {
     errorMessage,
     isCorrect,
     isInputDisabled,
+    isFullscreen,
     onInitGame,
     onToggleWord,
     onInputChange,
@@ -28,11 +29,39 @@ export const GamePage = () => {
     onReset,
     onStartNewGame,
     onFinishGame,
+    onToggleFullscreen,
+    onSetFullscreen,
   } = useGameStatus()
 
   useEffect(() => {
     onInitGame()
   }, [onInitGame])
+
+  // Отслеживаем изменения fullscreen
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      onSetFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [onSetFullscreen])
+
+  const handleToggleFullscreen = () => {
+    if (isFullscreen) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      }
+    } else {
+      const element = document.documentElement
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+      }
+    }
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onInputChange(e.target.value)
@@ -69,6 +98,15 @@ export const GamePage = () => {
     <div className={s['game-page']}>
       <div className={s['game-page__header']}>
         <h1 className={s['game-page__title']}>CROCODILE</h1>
+        <Button
+          size="m"
+          view="outlined"
+          onClick={handleToggleFullscreen}
+          className={s['game-page__fullscreen-button']}>
+          {isFullscreen
+            ? 'Выйти из полноэкранного режима'
+            : 'Полноэкранный режим'}
+        </Button>
       </div>
       <div className={s['game-page__instructions']}>
         {gameState === 'waiting' && (

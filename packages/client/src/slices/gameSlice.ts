@@ -9,6 +9,7 @@ const initialState: GameStatus = {
   errorMessage: '',
   isCorrect: null,
   gameState: 'waiting',
+  isFullscreen: false,
 }
 
 export const gameSlice = createSlice({
@@ -22,6 +23,7 @@ export const gameSlice = createSlice({
       state.errorMessage = ''
       state.isCorrect = null
       state.gameState = 'waiting'
+      state.isFullscreen = false
     },
     toggleWord: state => {
       if (state.gameState === 'waiting') {
@@ -79,6 +81,7 @@ export const gameSlice = createSlice({
       state.errorMessage = ''
       state.isCorrect = null
       state.gameState = 'waiting'
+      state.isFullscreen = false
     },
 
     startNewGame: state => {
@@ -88,6 +91,7 @@ export const gameSlice = createSlice({
       state.errorMessage = ''
       state.isCorrect = null
       state.gameState = 'waiting'
+      state.isFullscreen = false
     },
 
     clearError: state => {
@@ -105,6 +109,14 @@ export const gameSlice = createSlice({
     setGameState: (state, action: PayloadAction<GameState>) => {
       state.gameState = action.payload
     },
+
+    toggleFullscreen: state => {
+      state.isFullscreen = !state.isFullscreen
+    },
+
+    setFullscreen: (state, action: PayloadAction<boolean>) => {
+      state.isFullscreen = action.payload
+    },
   },
 })
 
@@ -119,6 +131,8 @@ export const {
   clearError,
   finishGame,
   setGameState,
+  toggleFullscreen,
+  setFullscreen,
 } = gameSlice.actions
 
 export const selectGame = (state: any) => state.game
@@ -128,5 +142,6 @@ export const selectIsWordRevealed = (state: any) => state.game.isWordRevealed
 export const selectInputWord = (state: any) => state.game.inputWord
 export const selectErrorMessage = (state: any) => state.game.errorMessage
 export const selectIsCorrect = (state: any) => state.game.isCorrect
+export const selectIsFullscreen = (state: any) => state.game.isFullscreen
 
 export default gameSlice.reducer

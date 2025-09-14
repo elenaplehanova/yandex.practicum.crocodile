@@ -10,6 +10,8 @@ import {
   startNewGame,
   clearError,
   finishGame,
+  toggleFullscreen,
+  setFullscreen,
   selectGame,
   selectCurrentWord,
   selectGameState,
@@ -17,6 +19,7 @@ import {
   selectInputWord,
   selectErrorMessage,
   selectIsCorrect,
+  selectIsFullscreen,
 } from '../slices/gameSlice'
 import { GameActions } from '../types/game'
 
@@ -30,6 +33,7 @@ export const useGameStatus = () => {
   const inputWord = useSelector(selectInputWord)
   const errorMessage = useSelector(selectErrorMessage)
   const isCorrect = useSelector(selectIsCorrect)
+  const isFullscreen = useSelector(selectIsFullscreen)
 
   const onInitGame = useCallback(() => {
     dispatch(initGame())
@@ -70,6 +74,17 @@ export const useGameStatus = () => {
     dispatch(finishGame())
   }, [dispatch])
 
+  const onToggleFullscreen = useCallback(() => {
+    dispatch(toggleFullscreen())
+  }, [dispatch])
+
+  const onSetFullscreen = useCallback(
+    (value: boolean) => {
+      dispatch(setFullscreen(value))
+    },
+    [dispatch]
+  )
+
   const isInputDisabled = !(gameState === 'playing' && !isWordRevealed)
 
   return {
@@ -80,6 +95,7 @@ export const useGameStatus = () => {
     errorMessage,
     isCorrect,
     isInputDisabled,
+    isFullscreen,
 
     onInitGame,
     onToggleWord,
@@ -90,5 +106,7 @@ export const useGameStatus = () => {
     onStartNewGame,
     onClearError,
     onFinishGame,
+    onToggleFullscreen,
+    onSetFullscreen,
   }
 }

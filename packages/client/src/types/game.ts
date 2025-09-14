@@ -7,6 +7,7 @@ export interface GameStatus {
   errorMessage: string
   isCorrect: boolean | null
   gameState: GameState
+  isFullscreen: boolean
 }
 
 export interface GameActions {
@@ -16,5 +17,6 @@ export interface GameActions {
   onNextWord: () => void
   onReset: () => void
   onStartNewGame: () => void
-  clearError: () => void
+  onClearError: () => void
+  onToggleFullscreen: () => void
 }
