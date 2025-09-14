@@ -37,7 +37,6 @@ export const GamePage = () => {
     onInitGame()
   }, [onInitGame])
 
-  // Отслеживаем изменения fullscreen
   useEffect(() => {
     const handleFullscreenChange = () => {
       onSetFullscreen(!!document.fullscreenElement)
