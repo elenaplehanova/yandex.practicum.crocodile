@@ -1,9 +1,9 @@
-import { type PlayedWords } from 'pages/GamePage/GamePage'
+import { PlayedWord } from '@slices/gameSlice'
 import s from './ResultsModal.module.scss'
 import { useMemo } from 'react'
 
 export interface IResultsModalProps {
-  playedWords: PlayedWords[]
+  playedWords: PlayedWord[]
 }
 
 export function ResultsModal({ playedWords }: IResultsModalProps) {
