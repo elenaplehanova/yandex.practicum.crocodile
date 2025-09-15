@@ -1,9 +1,10 @@
 import { Button, Flex, TextArea, TextInput } from '@gravity-ui/uikit'
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { withAuth } from '../../hocs/withAuth'
 import styles from './SubmitTopic.module.scss'
 
-export const SubmitTopicPage: FC = () => {
+export const SubmitTopicPage: FC = withAuth(() => {
   const navigate = useNavigate()
 
   return (
@@ -27,6 +28,6 @@ export const SubmitTopicPage: FC = () => {
       </form>
     </Flex>
   )
-}
+})
 
 export const initSubmitTopicPage = () => Promise.resolve()
