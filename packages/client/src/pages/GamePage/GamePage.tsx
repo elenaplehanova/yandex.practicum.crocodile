@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { usePage } from '../../hooks/usePage'
+import { usePage } from '@hooks/usePage'
 import WordCard from '../../components/WordCard'
 import { Button, Modal } from '@gravity-ui/uikit'
 import { getRandomWord, getNextWord } from '../../constants/gameWords'
