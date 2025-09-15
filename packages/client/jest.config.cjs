@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -13,6 +14,10 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.scss$': '<rootDir>/__mocks__/styleMock.js',
+    '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '^@pages/(.*)$': '<rootDir>/src/pages/$1',
+    '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
+    '^@slices/(.*)$': '<rootDir>/src/slices/$1',
   },
   transform: {
     "^.+\\.tsx?$": "ts-jest",
