@@ -1,13 +1,20 @@
 import { type PlayedWords } from 'pages/GamePage/GamePage'
 import s from './ResultsModal.module.scss'
+import { useMemo } from 'react'
 
 export interface IResultsModalProps {
   playedWords: PlayedWords[]
 }
 
-export function ResultsModal(props: IResultsModalProps) {
-  const guessedWords = props.playedWords.filter(item => item?.guessed)
-  const unsolvedWords = props.playedWords.filter(item => !item?.guessed)
+export function ResultsModal({ playedWords }: IResultsModalProps) {
+  const guessedWords = useMemo(
+    () => playedWords.filter(item => item?.guessed),
+    [playedWords]
+  )
+  const unsolvedWords = useMemo(
+    () => playedWords.filter(item => !item?.guessed),
+    [playedWords]
+  )
 
   return (
     <div className={s['results-modal']}>

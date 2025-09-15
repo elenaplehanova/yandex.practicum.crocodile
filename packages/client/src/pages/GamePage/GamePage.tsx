@@ -8,15 +8,23 @@ import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
 import { ResultsModal } from '@components/ResultsModal/ResultsModal'
 import { useNavigate } from 'react-router-dom'
-
-export type PlayedWords = {
-  word: string
-  guessed: boolean
-}
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'store'
+import {
+  addPlayedWord,
+  decrementTime,
+  resetGame,
+  setShowResults,
+} from '@slices/gameSlice'
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const { timeLeft, isShowResults, playedWords } = useSelector(
+    (state: RootState) => state.game
+  )
 
   const [currentWord, setCurrentWord] = useState<string>('')
   const [isWordRevealed, setIsWordRevealed] = useState<boolean>(false)
@@ -24,24 +32,25 @@ export const GamePage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
-  const [timeLeft, setTimeLeft] = useState<number>(60)
-  const [isShowResults, setIsShowResults] = useState(false)
-  const [playedWords, setPlayedWords] = useState<PlayedWords[]>([])
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          setIsShowResults(true)
-          return 0
-        }
-        return prev - 1
-      })
+    return () => {
+      dispatch(resetGame())
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      dispatch(setShowResults(true))
+      return
+    }
+
+    const id = setTimeout(() => {
+      dispatch(decrementTime())
     }, 1000)
 
-    return () => clearInterval(timer)
-  }, [])
+    return () => clearTimeout(id)
+  }, [timeLeft])
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60)
@@ -110,10 +119,7 @@ export const GamePage = () => {
 
     if (isWordCorrect) {
       setIsCorrect(true)
-      setPlayedWords(playedWords => [
-        ...playedWords,
-        { word: currentWord, guessed: true },
-      ])
+      dispatch(addPlayedWord({ word: currentWord, guessed: true }))
       setErrorMessage('Правильно! Переходим к следующему слову')
       setTimeout(() => {
         showNextWord()
@@ -141,10 +147,7 @@ export const GamePage = () => {
 
   const handleNextWord = () => {
     showNextWord()
-    setPlayedWords(playedWords => [
-      ...playedWords,
-      { word: currentWord, guessed: false },
-    ])
+    dispatch(addPlayedWord({ word: currentWord, guessed: false }))
   }
 
   return (
@@ -233,7 +236,7 @@ export const GamePage = () => {
       <Modal
         open={isShowResults}
         onClose={() => {
-          setIsShowResults(false)
+          dispatch(setShowResults(false))
           navigate('/start')
         }}>
         <ResultsModal playedWords={playedWords} />
