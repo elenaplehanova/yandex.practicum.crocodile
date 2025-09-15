@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { usePage } from '../../hooks/usePage'
 import WordCard from '../../components/WordCard'
-import { Button } from '@gravity-ui/uikit'
+import { Button, Modal } from '@gravity-ui/uikit'
 import { getRandomWord, getNextWord } from '../../constants/gameWords'
 import s from './GamePage.module.scss'
+import { Helmet } from 'react-helmet'
+import { Header } from '@components/Header'
+import { ResultsModal } from '@components/ResultsModal/ResultsModal'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'store'
+import {
+  addPlayedWord,
+  decrementTime,
+  resetGame,
+  setShowResults,
+} from '@slices/gameSlice'
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const { timeLeft, isShowResults, playedWords } = useSelector(
+    (state: RootState) => state.game
+  )
 
   const [currentWord, setCurrentWord] = useState<string>('')
   const [isWordRevealed, setIsWordRevealed] = useState<boolean>(false)
@@ -14,6 +32,31 @@ export const GamePage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetGame())
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      dispatch(setShowResults(true))
+      return
+    }
+
+    const id = setTimeout(() => {
+      dispatch(decrementTime())
+    }, 1000)
+
+    return () => clearTimeout(id)
+  }, [timeLeft])
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s < 10 ? '0' : ''}${s}`
+  }
 
   useEffect(() => {
     const initialWord = getRandomWord()
@@ -76,10 +119,11 @@ export const GamePage = () => {
 
     if (isWordCorrect) {
       setIsCorrect(true)
+      dispatch(addPlayedWord({ word: currentWord, guessed: true }))
       setErrorMessage('Правильно! Переходим к следующему слову')
       setTimeout(() => {
-        handleNextWord()
-      }, 1500)
+        showNextWord()
+      }, 700)
     } else {
       setIsCorrect(false)
       setErrorMessage('Неправильное слово')
@@ -92,7 +136,7 @@ export const GamePage = () => {
     }
   }
 
-  const handleNextWord = () => {
+  const showNextWord = () => {
     const nextWord = getNextWord(currentWord)
     setCurrentWord(nextWord)
     setIsWordRevealed(false)
@@ -101,52 +145,43 @@ export const GamePage = () => {
     setIsCorrect(null)
   }
 
+  const handleNextWord = () => {
+    showNextWord()
+    dispatch(addPlayedWord({ word: currentWord, guessed: false }))
+  }
+
   return (
-    <div className={s['game-page']}>
-      <div className={s['game-page__header']}>
-        <h1 className={s['game-page__title']}>CROCODILE</h1>
-        <Button
-          size="xl"
-          onClick={handleToggleFullscreen}
-          className={s['game-page__toggle-fullscreen-button']}>
-          {isFullscreen
-            ? 'Выход из полноэкранного режима'
-            : 'Полноэкранный режим'}
-        </Button>
-      </div>
+    <>
+      <div className={s['game-page']}>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>Game</title>
+          <meta name="description" content="Страница с игрой" />
+        </Helmet>
+        <Header />
 
-      <div className={s['game-page__instructions']}>
-        <p>Нажмите на карточку, чтобы увидеть слово</p>
-        <p>Введите слово в поле ниже и нажмите "Проверить"</p>
-        <p>Слово должно быть скрыто для ввода</p>
-      </div>
-
-      <div className={s['game-page__word-card']}>
-        <WordCard
-          word={currentWord}
-          isRevealed={isWordRevealed}
-          onToggle={handleToggleWord}
-        />
-      </div>
-
-      <div className={s['game-page__input']}>
-        <div className={s['game-page__input-container']}>
-          <input
-            type="text"
-            value={inputWord}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder="Введите слово..."
-            className={s['game-page__word-input']}
-            disabled={isWordRevealed}
-          />
+        <div className={s['game-page__header']}>
           <Button
             size="xl"
-            onClick={handleCheckWord}
-            disabled={isWordRevealed || !inputWord.trim()}
-            className={s['game-page__button']}>
-            Проверить
+            onClick={handleToggleFullscreen}
+            className={s['game-page__toggle-fullscreen-button']}>
+            {isFullscreen
+              ? 'Выход из полноэкранного режима'
+              : 'Полноэкранный режим'}
           </Button>
+        </div>
+
+        <div className={s['game-page__instructions']}>
+          <p>Нажмите на карточку, чтобы увидеть слово</p>
+          <p>Введите слово в поле ниже и нажмите "Проверить"</p>
+          <p>Слово должно быть скрыто для ввода</p>
+        </div>
+
+        <div className={s['game-page__timer']}>
+          Осталось времени:
+          <span className={s['game-page__timer_accent']}>
+            {formatTime(timeLeft)}
+          </span>
         </div>
 
         {errorMessage && (
@@ -159,17 +194,54 @@ export const GamePage = () => {
             {errorMessage}
           </div>
         )}
-      </div>
 
-      <div className={s['game-page__controls']}>
-        <Button
-          size="xl"
-          onClick={handleNextWord}
-          className={s['game-page__button']}>
-          Следующее слово
-        </Button>
+        <div className={s['game-page__word-card']}>
+          <WordCard
+            word={currentWord}
+            isRevealed={isWordRevealed}
+            onToggle={handleToggleWord}
+          />
+        </div>
+
+        <div className={s['game-page__input']}>
+          <div className={s['game-page__input-container']}>
+            <input
+              type="text"
+              value={inputWord}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder="Введите слово..."
+              className={s['game-page__word-input']}
+              disabled={isWordRevealed}
+            />
+            <Button
+              size="xl"
+              onClick={handleCheckWord}
+              disabled={isWordRevealed || !inputWord.trim()}
+              className={s['game-page__button']}>
+              Проверить
+            </Button>
+          </div>
+        </div>
+
+        <div className={s['game-page__controls']}>
+          <Button
+            size="xl"
+            onClick={handleNextWord}
+            className={s['game-page__button']}>
+            Следующее слово
+          </Button>
+        </div>
       </div>
-    </div>
+      <Modal
+        open={isShowResults}
+        onClose={() => {
+          dispatch(setShowResults(false))
+          navigate('/start')
+        }}>
+        <ResultsModal playedWords={playedWords} />
+      </Modal>
+    </>
   )
 }
 
