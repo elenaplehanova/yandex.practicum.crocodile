@@ -24,13 +24,15 @@ export const StartPage = () => {
       </Helmet>
       <Header />
       <div className={s['start-page__container']}>
-        <h1 className={s['start-page__header']}>CROCODILE</h1>
+        <div className={s['start-page__instructions']}>
+          <p>Таймер запустится как только нажмете на кнопку "Играть"</p>
+        </div>
         <Button
           size="xl"
           className={s['start-page__button']}
           onClick={handleClick}>
           <PlayFill />
-          Play
+          Играть
         </Button>
       </div>
     </div>

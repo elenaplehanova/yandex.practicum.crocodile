@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 import dotenv from 'dotenv'
 import path from 'path'
 dotenv.config()
@@ -20,7 +21,25 @@ export default defineConfig({
     format: 'esm',
     noExternal: ['@gravity-ui/uikit'],
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'custom-sw.js',
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,png,svg,ico,webp,jpg,jpeg,woff2}'],
+      },
+      manifest: {
+        name: 'Crocodile Game',
+        short_name: 'Crocodile',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#000',
+        theme_color: '#000',
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
