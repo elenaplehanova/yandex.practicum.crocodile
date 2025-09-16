@@ -3,10 +3,11 @@
 .game-page {
   width: 100%;
   margin: 0;
-  padding: 20px;
   min-height: 100vh;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0.4)
+    ),
     url('../../assets/background_start_game.jpg') no-repeat center center;
   background-size: cover, cover;
   background-position: center, center;
@@ -14,31 +15,18 @@
   position: relative;
   overflow: hidden;
 
-  &__header {
-    text-align: center;
-    margin-bottom: 40px;
-    position: relative;
-    z-index: 2;
-  }
-
-  &__title {
-    font-family: SuperBubble, fantasy;
-    font-size: 48px;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
   &__instructions {
     text-align: center;
-    margin-bottom: 36px;
     background: rgba(255, 255, 255, 0.12);
-    padding: 22px;
+    margin: 20px;
+    padding: 20px;
     border-radius: 20px;
     backdrop-filter: blur(16px);
     border: 2px solid rgba(255, 255, 255, 0.25);
     position: relative;
     z-index: 2;
-    box-shadow: 0 14px 36px rgba(0,0,0,0.18), inset 0 2px 0 rgba(255,255,255,0.3);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
 
     p {
       margin: 10px 0;
@@ -52,8 +40,6 @@
   &__word-card {
     display: flex;
     justify-content: center;
-    margin: 34px 0;
-    padding: 10px;
     position: relative;
     z-index: 2;
   }
@@ -83,13 +69,14 @@
     color: #30aa6e;
     min-width: 260px;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08);
 
     &:focus {
       outline: none;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.18), 0 0 0 4px rgba(107, 142, 35, 0.28);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18),
+        0 0 0 4px rgba(107, 142, 35, 0.28);
       transform: translateY(-2px);
-      background: rgba(255,255,255,1);
+      background: rgba(255, 255, 255, 1);
     }
 
     &:disabled {
@@ -97,7 +84,7 @@
       color: #6b8e23;
       cursor: not-allowed;
       transform: none;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     &::placeholder {
@@ -112,24 +99,34 @@
     border-radius: 20px;
     font-weight: 700;
     font-size: 1.02rem;
-    margin: 0 auto;
     max-width: 420px;
     backdrop-filter: blur(10px);
     border: 2px solid;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    margin: 20px auto;
 
     &--success {
-      background: linear-gradient(135deg, rgba(46, 213, 115, 0.28), rgba(0, 184, 148, 0.28));
+      background: linear-gradient(
+        135deg,
+        rgba(46, 213, 115, 0.28),
+        rgba(0, 184, 148, 0.28)
+      );
       color: #ffffff;
       border-color: rgba(46, 213, 115, 0.75);
-      box-shadow: 0 10px 28px rgba(46, 213, 115, 0.35), 0 5px 16px rgba(0, 184, 148, 0.25);
+      box-shadow: 0 10px 28px rgba(46, 213, 115, 0.35),
+        0 5px 16px rgba(0, 184, 148, 0.25);
     }
 
     &--error {
-      background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
+      background: linear-gradient(
+        135deg,
+        rgba(231, 76, 60, 0.3),
+        rgba(192, 57, 43, 0.3)
+      );
       color: #ffffff;
       border-color: rgba(231, 76, 60, 0.75);
-      box-shadow: 0 10px 28px rgba(231, 76, 60, 0.35), 0 5px 16px rgba(192, 57, 43, 0.25);
+      box-shadow: 0 10px 28px rgba(231, 76, 60, 0.35),
+        0 5px 16px rgba(192, 57, 43, 0.25);
     }
   }
 
@@ -178,5 +175,31 @@
     gap: 16px;
     flex-wrap: wrap;
     justify-content: center;
+
+  &__timer {
+    display: flex;
+    justify-content: center;
+    color: var(--g-color-base-positive-heavy, green);
+    font-size: 24px;
+    padding: 14px 20px;
+    border-radius: 20px;
+    margin: auto;
+    max-width: 420px;
+    backdrop-filter: blur(10px);
+    border: 2px solid;
+    text-shadow: var(--text-shadow-light);
+    &_accent {
+      font-size: 26px;
+      font-weight: 700;
+      margin-left: 10px;
+    }
+  }
+
+  &__header {
+    display: flex;
+  }
+
+  &__toggle-fullscreen-button {
+    margin: 10px 10px 10px auto;
   }
 }

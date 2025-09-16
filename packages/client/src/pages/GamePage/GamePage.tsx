@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { usePage } from '../../hooks/usePage'
 import { useGameStatus } from '../../hooks/useGameStatus'
 import WordCard from '../../components/WordCard'
-import { Button } from '@gravity-ui/uikit'
+import { Button, Modal } from '@gravity-ui/uikit'
+import { useDispatch, useSelector } from '../../store'
+import { RootState } from '../../store'
+import { addPlayedWord, decrementTime, resetGame, setShowResults } from '@slices/gameSlice'
 import s from './GamePage.module.scss'
 
 const initGame = () => Promise.resolve()
@@ -12,6 +15,10 @@ export const GamePage = () => {
   usePage({ initPage: initGame })
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { timeLeft, isShowResults, playedWords } = useSelector(
+    (state: RootState) => state.game
+  )
   const {
     currentWord,
     gameState,
@@ -37,7 +44,13 @@ export const GamePage = () => {
     onInitGame()
   }, [onInitGame])
 
-    useEffect(() => {
+  useEffect(() => {
+    return () => {
+      dispatch(resetGame())
+    }
+  }, [dispatch])
+
+  useEffect(() => {
     const handleFullscreenChange = () => {
       onSetFullscreen(!!document.fullscreenElement)
     }
@@ -62,12 +75,6 @@ export const GamePage = () => {
     }
   }
 
-  const handleToggleWord = () => {
-    setIsWordRevealed(!isWordRevealed)
-    setErrorMessage('')
-    setIsCorrect(null)
-  }
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onInputChange(e.target.value)
   }
@@ -78,6 +85,7 @@ export const GamePage = () => {
 
   useEffect(() => {
     if (isCorrect === true) {
+      dispatch(addPlayedWord({ word: currentWord, guessed: true }))
       const timer = setTimeout(() => {
         onFinishGame()
       }, 1200)
@@ -99,16 +107,44 @@ export const GamePage = () => {
     }
   }, [isInputDisabled])
 
+  useEffect(() => {
+    if (gameState !== 'playing') return
+
+    if (timeLeft <= 0) {
+      dispatch(setShowResults(true))
+      return
+    }
+
+    const id = setTimeout(() => {
+      dispatch(decrementTime())
+    }, 1000)
+
+    return () => clearTimeout(id)
+  }, [timeLeft, gameState, dispatch])
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s < 10 ? '0' : ''}${s}`
+  }
+
+  const handleNextWord = () => {
+    dispatch(addPlayedWord({ word: currentWord, guessed: false }))
+    onNextWord()
+  }
+
   return (
+    <>
     <div className={s['game-page']}>
       <div className={s['game-page__header']}>
         <h1 className={s['game-page__title']}>CROCODILE</h1>
         <Button
-          size="xl"
+          size="m"
+          view="outlined"
           onClick={handleToggleFullscreen}
-          className={s['game-page__toggle-fullscreen-button']}>
+          className={s['game-page__fullscreen-button']}>
           {isFullscreen
-            ? 'Выход из полноэкранного режима'
+            ? 'Выйти из полноэкранного режима'
             : 'Полноэкранный режим'}
         </Button>
       </div>
@@ -176,11 +212,18 @@ export const GamePage = () => {
         </div>
       )}
 
+      {gameState === 'playing' && (
+        <div className={s['game-page__timer']}>
+          Осталось времени:
+          <span className={s['game-page__timer_accent']}>{formatTime(timeLeft)}</span>
+        </div>
+      )}
+
       {gameState === 'ready' && (
         <div className={s['game-page__controls']}>
           <Button
             size="xl"
-            onClick={onNextWord}
+            onClick={handleNextWord}
             className={s['game-page__button']}>
             Следующее слово
           </Button>
@@ -210,5 +253,37 @@ export const GamePage = () => {
         </div>
       )}
     </div>
+      <Modal
+        open={isShowResults}
+        onClose={() => {
+          dispatch(setShowResults(false))
+          navigate('/start')
+        }}>
+        <div style={{ padding: 24 }}>
+          <h3>Результаты</h3>
+          {playedWords.length === 0 ? (
+            <div>Нет сыгранных слов</div>
+          ) : (
+            <ul>
+              {playedWords.map((w, idx) => (
+                <li key={idx}>
+                  {w.word} — {w.guessed ? 'угадано' : 'пропущено'}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div style={{ marginTop: 16 }}>
+            <Button
+              view="action"
+              onClick={() => {
+                dispatch(setShowResults(false))
+                navigate('/start')
+              }}>
+              Закрыть
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   )
 }
