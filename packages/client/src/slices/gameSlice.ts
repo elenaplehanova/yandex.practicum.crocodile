@@ -2,7 +2,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getRandomWord, getNextWord } from '../constants/gameWords'
 import { GameState, GameStatus } from '../types/game'
 
-const initialState: GameStatus = {
+export type PlayedWord = {
+  word: string
+  guessed: boolean
+}
+
+type ExtendedGameStatus = GameStatus & {
+  timeLeft: number
+  isShowResults: boolean
+  playedWords: PlayedWord[]
+}
+
+const initialState: ExtendedGameStatus = {
   currentWord: '',
   isWordRevealed: false,
   inputWord: '',
@@ -10,12 +21,30 @@ const initialState: GameStatus = {
   isCorrect: null,
   gameState: 'waiting',
   isFullscreen: false,
+  timeLeft: 60,
+  isShowResults: false,
+  playedWords: [],
 }
 
 export const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
+    // dev branch timer/results
+    setTimeLeft: (state, action: PayloadAction<number>) => {
+      state.timeLeft = action.payload
+    },
+    decrementTime: state => {
+      if (state.timeLeft > 0) {
+        state.timeLeft -= 1
+      }
+    },
+    setShowResults: (state, action: PayloadAction<boolean>) => {
+      state.isShowResults = action.payload
+    },
+    addPlayedWord: (state, action: PayloadAction<PlayedWord>) => {
+      state.playedWords.push(action.payload)
+    },
     initGame: state => {
       state.currentWord = getRandomWord()
       state.isWordRevealed = false
@@ -82,6 +111,9 @@ export const gameSlice = createSlice({
       state.isCorrect = null
       state.gameState = 'waiting'
       state.isFullscreen = false
+      state.timeLeft = 60
+      state.isShowResults = false
+      state.playedWords = []
     },
 
     startNewGame: state => {
@@ -121,6 +153,10 @@ export const gameSlice = createSlice({
 })
 
 export const {
+  setTimeLeft,
+  decrementTime,
+  setShowResults,
+  addPlayedWord,
   initGame,
   toggleWord,
   setInputWord,
