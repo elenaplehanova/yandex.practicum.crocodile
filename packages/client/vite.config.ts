@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
 import dotenv from 'dotenv'
 import path from 'path'
 dotenv.config()
@@ -23,22 +22,35 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    VitePWA({
-      strategies: 'injectManifest',
-      srcDir: 'src',
-      filename: 'custom-sw.js',
-      injectManifest: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico,webp,jpg,jpeg,woff2}'],
-      },
-      manifest: {
-        name: 'Crocodile Game',
-        short_name: 'Crocodile',
-        start_url: '/',
-        display: 'standalone',
-        background_color: '#000',
-        theme_color: '#000',
-      },
-    }),
+    // Подключаем PWA-плагин только если он установлен (чтобы dev не падал)
+    ...(() => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { VitePWA } = require('vite-plugin-pwa')
+        return [
+          VitePWA({
+            strategies: 'injectManifest',
+            srcDir: 'src',
+            filename: 'custom-sw.js',
+            injectManifest: {
+              globPatterns: [
+                '**/*.{js,css,html,png,svg,ico,webp,jpg,jpeg,woff2}',
+              ],
+            },
+            manifest: {
+              name: 'Crocodile Game',
+              short_name: 'Crocodile',
+              start_url: '/',
+              display: 'standalone',
+              background_color: '#000',
+              theme_color: '#000',
+            },
+          }),
+        ]
+      } catch {
+        return []
+      }
+    })(),
   ],
   resolve: {
     alias: {
