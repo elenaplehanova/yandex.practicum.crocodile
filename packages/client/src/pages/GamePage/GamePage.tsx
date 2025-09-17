@@ -6,13 +6,12 @@ import WordCard from '../../components/WordCard'
 import { Button, Modal } from '@gravity-ui/uikit'
 import { useDispatch, useSelector } from '../../store'
 import { RootState } from '../../store'
-import {
-  addPlayedWord,
-  decrementTime,
-  resetGame,
-  setShowResults,
-} from '@slices/gameSlice'
+import { addPlayedWord, decrementTime, setShowResults } from '@slices/gameSlice'
 import s from './GamePage.module.scss'
+import { Helmet } from 'react-helmet'
+import { Header } from '@components/Header'
+import { ResultsModal } from '@components/ResultsModal/ResultsModal'
+import { GameState } from '../../types/game'
 
 const initGame = () => Promise.resolve()
 
@@ -38,7 +37,6 @@ export const GamePage = () => {
     onInputChange,
     onCheckWord,
     onNextWord,
-    onReset,
     onStartNewGame,
     onFinishGame,
     onToggleFullscreen,
@@ -48,12 +46,6 @@ export const GamePage = () => {
   useEffect(() => {
     onInitGame()
   }, [onInitGame])
-
-  useEffect(() => {
-    return () => {
-      dispatch(resetGame())
-    }
-  }, [dispatch])
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -91,13 +83,9 @@ export const GamePage = () => {
   useEffect(() => {
     if (isCorrect === true) {
       dispatch(addPlayedWord({ word: currentWord, guessed: true }))
-      const timer = setTimeout(() => {
-        onFinishGame()
-      }, 1200)
-
-      return () => clearTimeout(timer)
+      onNextWord()
     }
-  }, [isCorrect, onFinishGame])
+  }, [isCorrect])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -113,9 +101,10 @@ export const GamePage = () => {
   }, [isInputDisabled])
 
   useEffect(() => {
-    if (gameState !== 'playing') return
+    if (gameState !== GameState.Playing) return
 
     if (timeLeft <= 0) {
+      onFinishGame()
       dispatch(setShowResults(true))
       return
     }
@@ -141,8 +130,14 @@ export const GamePage = () => {
   return (
     <>
       <div className={s['game-page']}>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>Game</title>
+          <meta name="description" content="Страница с игрой" />
+        </Helmet>
+        <Header />
+
         <div className={s['game-page__header']}>
-          <h1 className={s['game-page__title']}>CROCODILE</h1>
           <Button
             size="m"
             view="outlined"
@@ -154,27 +149,48 @@ export const GamePage = () => {
           </Button>
         </div>
         <div className={s['game-page__instructions']}>
-          {gameState === 'waiting' && (
+          {gameState === GameState.Waiting && (
             <p>Нажмите на карточку, когда будете готовы показать слово</p>
           )}
-          {gameState === 'ready' && (
-            <p>
-              Изучите слово. Нажмите "Следующее слово" для нового слова или
-              нажмите на карточку для начала игры
-            </p>
+          {gameState === GameState.Ready && (
+            <>
+              <p>Изучите слово. Нажмите на карточку для начала игры</p>
+              <p>Таймер запустится как только нажмете на карточку</p>
+            </>
           )}
-          {gameState === 'playing' && (
+          {gameState === GameState.Playing && (
             <>
               <p>Ведущий показывает слово пантомимой</p>
               <p>
                 Нажмите на карточку, чтобы скрыть слово и начать ввод ответов
               </p>
+              <p>Нажмите "Следующее слово" чтобы пропустить слово</p>
             </>
           )}
-          {gameState === 'finished' && <p>Игра завершена</p>}
+          {gameState === GameState.Finished && <p>Игра завершена</p>}
         </div>
 
-        {gameState !== 'finished' && (
+        {gameState === GameState.Playing && (
+          <div className={s['game-page__timer']}>
+            Осталось времени:
+            <span className={s['game-page__timer_accent']}>
+              {formatTime(timeLeft)}
+            </span>
+          </div>
+        )}
+
+        {gameState === GameState.Playing && errorMessage && (
+          <div
+            className={`${s['game-page__message']} ${
+              isCorrect
+                ? s['game-page__message--success']
+                : s['game-page__message--error']
+            }`}>
+            {errorMessage}
+          </div>
+        )}
+
+        {gameState !== GameState.Finished && (
           <div className={s['game-page__word-card']}>
             <WordCard
               word={currentWord}
@@ -184,7 +200,7 @@ export const GamePage = () => {
           </div>
         )}
 
-        {gameState === 'playing' && (
+        {gameState === GameState.Playing && (
           <div className={s['game-page__input']}>
             <div className={s['game-page__input-container']}>
               <input
@@ -205,59 +221,13 @@ export const GamePage = () => {
                 Проверить
               </Button>
             </div>
-
-            {errorMessage && (
-              <div
-                className={`${s['game-page__message']} ${
-                  isCorrect
-                    ? s['game-page__message--success']
-                    : s['game-page__message--error']
-                }`}>
-                {errorMessage}
-              </div>
-            )}
-          </div>
-        )}
-
-        {gameState === 'playing' && (
-          <div className={s['game-page__timer']}>
-            Осталось времени:
-            <span className={s['game-page__timer_accent']}>
-              {formatTime(timeLeft)}
-            </span>
-          </div>
-        )}
-
-        {gameState === 'ready' && (
-          <div className={s['game-page__controls']}>
-            <Button
-              size="xl"
-              onClick={handleNextWord}
-              className={s['game-page__button']}>
-              Следующее слово
-            </Button>
-          </div>
-        )}
-
-        {gameState === 'finished' && (
-          <div className={s['game-page__finish']}>
-            <div className={s['game-page__finish-window']}>
-              <div className={s['game-page__finish-actions']}>
-                <Button
-                  size="xl"
-                  view="outlined"
-                  onClick={onStartNewGame}
-                  className={s['game-page__button']}>
-                  Начать заново
-                </Button>
-                <Button
-                  size="xl"
-                  view="action"
-                  onClick={() => navigate('/')}
-                  className={s['game-page__button']}>
-                  Главное меню
-                </Button>
-              </div>
+            <div className={s['game-page__controls']}>
+              <Button
+                size="xl"
+                onClick={handleNextWord}
+                className={s['game-page__button']}>
+                Следующее слово
+              </Button>
             </div>
           </div>
         )}
@@ -268,30 +238,7 @@ export const GamePage = () => {
           dispatch(setShowResults(false))
           navigate('/start')
         }}>
-        <div style={{ padding: 24 }}>
-          <h3>Результаты</h3>
-          {playedWords.length === 0 ? (
-            <div>Нет сыгранных слов</div>
-          ) : (
-            <ul>
-              {playedWords.map((w, idx) => (
-                <li key={idx}>
-                  {w.word} — {w.guessed ? 'угадано' : 'пропущено'}
-                </li>
-              ))}
-            </ul>
-          )}
-          <div style={{ marginTop: 16 }}>
-            <Button
-              view="action"
-              onClick={() => {
-                dispatch(setShowResults(false))
-                navigate('/start')
-              }}>
-              Закрыть
-            </Button>
-          </div>
-        </div>
+        <ResultsModal playedWords={playedWords} />
       </Modal>
     </>
   )

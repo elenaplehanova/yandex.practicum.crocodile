@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getRandomWord, getNextWord } from '../constants/gameWords'
-import { GameState, GameStatus } from '../types/game'
+import { GameState, GameStateType, GameStatus } from '../types/game'
 
 export type PlayedWord = {
   word: string
@@ -19,7 +19,7 @@ const initialState: ExtendedGameStatus = {
   inputWord: '',
   errorMessage: '',
   isCorrect: null,
-  gameState: 'waiting',
+  gameState: GameState.Waiting,
   isFullscreen: false,
   timeLeft: 60,
   isShowResults: false,
@@ -51,16 +51,16 @@ export const gameSlice = createSlice({
       state.inputWord = ''
       state.errorMessage = ''
       state.isCorrect = null
-      state.gameState = 'waiting'
+      state.gameState = GameState.Waiting
       state.isFullscreen = false
     },
     toggleWord: state => {
-      if (state.gameState === 'waiting') {
+      if (state.gameState === GameState.Waiting) {
         state.isWordRevealed = true
-        state.gameState = 'ready'
-      } else if (state.gameState === 'ready') {
-        state.gameState = 'playing'
-      } else if (state.gameState === 'playing') {
+        state.gameState = GameState.Ready
+      } else if (state.gameState === GameState.Ready) {
+        state.gameState = GameState.Playing
+      } else if (state.gameState === GameState.Playing) {
         state.isWordRevealed = !state.isWordRevealed
       }
       state.errorMessage = ''
@@ -80,7 +80,7 @@ export const gameSlice = createSlice({
         return
       }
 
-      if (state.gameState !== 'playing' || state.isWordRevealed) {
+      if (state.gameState !== GameState.Playing || state.isWordRevealed) {
         state.errorMessage = 'Дождитесь начала игры'
         state.isCorrect = false
         return
@@ -91,8 +91,8 @@ export const gameSlice = createSlice({
 
       if (isWordCorrect) {
         state.isCorrect = true
-        state.errorMessage = 'Правильно! Игра завершена'
-        // Игра завершается через setTimeout в компоненте
+        state.errorMessage = 'Правильно! Показывайте следующее слово'
+        state.inputWord = ''
       } else {
         state.isCorrect = false
         state.errorMessage = 'Неправильное слово'
@@ -103,27 +103,17 @@ export const gameSlice = createSlice({
       state.currentWord = getNextWord(state.currentWord)
     },
 
-    resetGame: state => {
-      state.currentWord = getRandomWord()
-      state.isWordRevealed = false
-      state.inputWord = ''
-      state.errorMessage = ''
-      state.isCorrect = null
-      state.gameState = 'waiting'
-      state.isFullscreen = false
-      state.timeLeft = 60
-      state.isShowResults = false
-      state.playedWords = []
-    },
-
     startNewGame: state => {
       state.currentWord = getRandomWord()
       state.isWordRevealed = false
       state.inputWord = ''
       state.errorMessage = ''
       state.isCorrect = null
-      state.gameState = 'waiting'
+      state.gameState = GameState.Waiting
       state.isFullscreen = false
+      state.isShowResults = false
+      state.playedWords = []
+      state.timeLeft = 60
     },
 
     clearError: state => {
@@ -135,10 +125,10 @@ export const gameSlice = createSlice({
       state.isWordRevealed = false
       state.inputWord = ''
       state.isCorrect = null
-      state.gameState = 'finished'
+      state.gameState = GameState.Finished
     },
 
-    setGameState: (state, action: PayloadAction<GameState>) => {
+    setGameState: (state, action: PayloadAction<GameStateType>) => {
       state.gameState = action.payload
     },
 
@@ -162,7 +152,6 @@ export const {
   setInputWord,
   checkWord,
   nextWord,
-  resetGame,
   startNewGame,
   clearError,
   finishGame,

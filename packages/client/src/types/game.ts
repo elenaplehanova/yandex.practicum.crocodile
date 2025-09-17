@@ -1,4 +1,11 @@
-export type GameState = 'waiting' | 'ready' | 'playing' | 'finished'
+export enum GameState {
+  Waiting = 'waiting',
+  Ready = 'ready',
+  Playing = 'playing',
+  Finished = 'finished',
+}
+
+export type GameStateType = `${GameState}`
 
 export interface GameStatus {
   currentWord: string
@@ -6,7 +13,7 @@ export interface GameStatus {
   inputWord: string
   errorMessage: string
   isCorrect: boolean | null
-  gameState: GameState
+  gameState: GameStateType
   isFullscreen: boolean
 }
 
@@ -15,7 +22,6 @@ export interface GameActions {
   onInputChange: (value: string) => void
   onCheckWord: () => void
   onNextWord: () => void
-  onReset: () => void
   onStartNewGame: () => void
   onClearError: () => void
   onToggleFullscreen: () => void
