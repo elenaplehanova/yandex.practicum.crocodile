@@ -6,7 +6,6 @@ import {
   setInputWord,
   checkWord,
   nextWord,
-  resetGame,
   startNewGame,
   clearError,
   finishGame,
@@ -21,7 +20,7 @@ import {
   selectIsCorrect,
   selectIsFullscreen,
 } from '../slices/gameSlice'
-import { GameActions } from '../types/game'
+import { GameState } from '../types/game'
 
 export const useGameStatus = () => {
   const dispatch = useDispatch()
@@ -58,10 +57,6 @@ export const useGameStatus = () => {
     dispatch(nextWord())
   }, [dispatch])
 
-  const onReset = useCallback(() => {
-    dispatch(resetGame())
-  }, [dispatch])
-
   const onStartNewGame = useCallback(() => {
     dispatch(startNewGame())
   }, [dispatch])
@@ -85,7 +80,7 @@ export const useGameStatus = () => {
     [dispatch]
   )
 
-  const isInputDisabled = !(gameState === 'playing' && !isWordRevealed)
+  const isInputDisabled = !(gameState === GameState.Playing && !isWordRevealed)
 
   return {
     currentWord,
@@ -102,7 +97,6 @@ export const useGameStatus = () => {
     onInputChange,
     onCheckWord,
     onNextWord,
-    onReset,
     onStartNewGame,
     onClearError,
     onFinishGame,

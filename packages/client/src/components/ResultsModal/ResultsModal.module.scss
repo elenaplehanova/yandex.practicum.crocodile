@@ -48,7 +48,6 @@
   &__subheader {
     padding: 5px;
     letter-spacing: 3px;
-
   }
 
   &__text {
@@ -61,5 +60,22 @@
     font-weight: 700;
     border-bottom: 2px solid currentColor;
     text-shadow: var(--text-shadow-light);
+  }
+
+  &__finish-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__button {
+    --g-button-background-color: var(--g-color-base-positive-heavy, green);
+    --g-button-text-color-hover: var(
+      --g-color-text-inverted-secondary,
+      lightgray
+    );
+    --g-button-text-color: var(--g-color-base-generic-ultralight, white);
+    font-weight: 700;
   }
 }

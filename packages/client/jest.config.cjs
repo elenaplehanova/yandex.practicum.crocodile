@@ -9,7 +9,8 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
-    __EXTERNAL_SERVER_URL__: process.env.EXTERNAL_SERVER_URL ?? 'http://localhost:3001',
+    __EXTERNAL_SERVER_URL__:
+      process.env.EXTERNAL_SERVER_URL ?? 'http://localhost:3001',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
@@ -21,7 +22,7 @@ module.exports = {
     '^@slices/(.*)$': '<rootDir>/src/slices/$1',
   },
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    '^.+\\.tsx?$': 'ts-jest',
   },
   transformIgnorePatterns: [
     '<rootDir>/node_modules/',
