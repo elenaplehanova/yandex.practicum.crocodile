@@ -1,7 +1,7 @@
 import { AppDispatch, RootState } from './store'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
-import { initGamePage, GamePage } from './pages/GamePage/GamePage'
+import { GamePage } from './pages/GamePage/GamePage'
 import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
 import { initProfilePage, ProfilePage } from './pages/Profile/ProfilePage'
 import { initTopicPage, TopicPage } from './pages/Topic'
@@ -49,7 +49,7 @@ export const routes = [
   {
     path: '/game',
     Component: GamePage,
-    fetchData: initGamePage,
+    fetchData: () => Promise.resolve(),
   },
   {
     path: '/leaderboard',

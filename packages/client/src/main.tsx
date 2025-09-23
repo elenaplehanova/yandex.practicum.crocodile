@@ -11,6 +11,15 @@ import { routes } from './routes'
 import { ThemeProvider } from '@gravity-ui/uikit'
 import { StyleSheetManager } from 'styled-components'
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/custom-sw.js')
+      .then(reg => console.log('✅ SW зарегистрирован:', reg))
+      .catch(err => console.error('❌ Ошибка регистрации SW:', err))
+  })
+}
+
 const router = createBrowserRouter(routes)
 
 ReactDOM.hydrateRoot(

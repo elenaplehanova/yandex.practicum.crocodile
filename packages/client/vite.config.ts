@@ -20,7 +20,38 @@ export default defineConfig({
     format: 'esm',
     noExternal: ['@gravity-ui/uikit'],
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Подключаем PWA-плагин только если он установлен (чтобы dev не падал)
+    ...(() => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { VitePWA } = require('vite-plugin-pwa')
+        return [
+          VitePWA({
+            strategies: 'injectManifest',
+            srcDir: 'src',
+            filename: 'custom-sw.js',
+            injectManifest: {
+              globPatterns: [
+                '**/*.{js,css,html,png,svg,ico,webp,jpg,jpeg,woff2}',
+              ],
+            },
+            manifest: {
+              name: 'Crocodile Game',
+              short_name: 'Crocodile',
+              start_url: '/',
+              display: 'standalone',
+              background_color: '#000',
+              theme_color: '#000',
+            },
+          }),
+        ]
+      } catch {
+        return []
+      }
+    })(),
+  ],
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
