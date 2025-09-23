@@ -5,35 +5,6 @@ import { MemoryRouter } from 'react-router-dom'
 import { GamePage } from './GamePage'
 import { store } from '../../store'
 
-const mockCanvasRenderingContext2D = jest.fn().mockImplementation(() => ({
-  restore: jest.fn(),
-  save: jest.fn(),
-  beginPath: jest.fn(),
-  moveTo: jest.fn(),
-  lineTo: jest.fn(),
-  stroke: jest.fn(),
-  fillText: jest.fn(),
-  measureText: jest.fn().mockReturnValue({ width: 100 }),
-}))
-
-Object.defineProperty(window, 'CanvasRenderingContext2D', {
-  value: mockCanvasRenderingContext2D,
-})
-
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-})
-
 describe('GamePage', () => {
   it('render GamePage component and check game name', () => {
     const { getByText } = render(
@@ -62,13 +33,19 @@ describe('GamePage', () => {
   })
 
   it('check if word input is exist and type something', async () => {
-    const { getByRole } = render(
+    const { getByRole, getByTitle } = render(
       <Provider store={store}>
         <MemoryRouter>
           <GamePage />
         </MemoryRouter>
       </Provider>
     )
+    // Transition: waiting -> ready (revealed) -> playing (revealed) -> toggle to hidden
+    const card = getByTitle('Нажмите, чтобы увидеть слово')
+    fireEvent.click(card)
+    fireEvent.click(card)
+    fireEvent.click(card)
+
     const wordInput = getByRole('textbox')
     fireEvent.change(wordInput, { target: { value: 'test' } })
     await waitFor(() => expect(wordInput).toHaveValue('test'))
