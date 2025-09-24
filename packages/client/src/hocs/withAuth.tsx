@@ -1,5 +1,5 @@
 import { useAuth } from '@hooks/useAuth'
-import { ComponentType } from 'react'
+import { ComponentType, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export const withAuth = <P extends Record<string, unknown>>(
@@ -9,8 +9,13 @@ export const withAuth = <P extends Record<string, unknown>>(
     const { isAuth } = useAuth()
     const navigate = useNavigate()
 
+    useEffect(() => {
+      if (!isAuth) {
+        navigate('/sign-in')
+      }
+    }, [isAuth, navigate])
+
     if (!isAuth) {
-      navigate('/sign-in')
       return null
     }
 

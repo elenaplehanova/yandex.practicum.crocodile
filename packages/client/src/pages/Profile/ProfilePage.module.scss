@@ -1,28 +1,37 @@
+@use '@styles/_extend' as *;
+
+.wrapper {
+  @extend %wrapper;
+  height: 100vh;
+}
+
 .profile-page {
-    padding: 25px;
+  @extend %form-block;
+  padding: 10px;
+  margin: 20px;
 
-    &__title {
-        display: block;
-        text-align: center;
-        margin: 25px 0px;
-    }
+  &__title {
+    display: block;
+    text-align: center;
+    margin: 25px 0px;
+  }
 
-    &__avatar {
-        align-items: center;
-        justify-content: center;
-        gap: 25px;
-        margin-bottom: 25px;
-    }
+  &__avatar {
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 25px;
+  }
 
-    &__password_link {
-        margin-top: 25px;
-    }
+  &__password_link {
+    margin-top: 25px;
+  }
 
-    &__noty {
-        width: 100%;
-        display: block;
-        text-align: center;
-        font-weight: 500;
-        margin-bottom: 20px;
-    }
+  &__noty {
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
 }
