@@ -1,0 +1,33 @@
+.header {
+  display: flex;
+  background-color: var(--g-color-base-neutral-heavy);
+  color: var(--g-color-base-generic-ultralight, white);
+  &__logo {
+    font-family: SuperBubble, fantasy;
+    text-shadow: var(--text-shadow-yellow);
+    font-size: 36px;
+    line-height: 1;
+    color: var(--g-color-text-primary);
+    margin: 10px 30px;
+  }
+  &__menu {
+    margin: auto;
+    margin-right: 30px;
+  }
+  &__links-list {
+    display: flex;
+    gap: 32px;
+    padding: 3px;
+    list-style-type: none;
+    &-item {
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    &-link {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

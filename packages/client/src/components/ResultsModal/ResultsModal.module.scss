@@ -1,0 +1,81 @@
+.results-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--g-color-base-positive-heavy, green);
+  max-height: calc(100vh - 100px);
+  overflow: auto;
+  color: var(--g-color-base-generic-ultralight, white);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+
+  &__title {
+    padding: 10px;
+    margin-bottom: 20px;
+    text-shadow: var(--text-shadow-light);
+    letter-spacing: 10px;
+  }
+
+  &__instructions {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 20px;
+    padding: 10px;
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
+
+    p {
+      margin: 10px 0;
+      font-size: 12px;
+      line-height: 1.6;
+      font-weight: 600;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  &__results {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px;
+    justify-content: center;
+  }
+
+  &__subheader {
+    padding: 5px;
+    letter-spacing: 3px;
+  }
+
+  &__text {
+    text-align: center;
+  }
+
+  &__accent {
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    border-bottom: 2px solid currentColor;
+    text-shadow: var(--text-shadow-light);
+  }
+
+  &__finish-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__button {
+    --g-button-background-color: var(--g-color-base-positive-heavy, green);
+    --g-button-text-color-hover: var(
+      --g-color-text-inverted-secondary,
+      lightgray
+    );
+    --g-button-text-color: var(--g-color-base-generic-ultralight, white);
+    font-weight: 700;
+  }
+}

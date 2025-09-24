@@ -1,8 +1,21 @@
 import { AppDispatch, RootState } from './store'
-
-import { initMainPage, MainPage } from './pages/Main'
-import { initFriendsPage, FriendsPage } from './pages/FriendsPage'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
+import { initMainPage, MainPage } from './pages/MainPage'
+import { ForumPage, initForumPage } from './pages/Forum/Forum'
+import { GamePage } from './pages/GamePage/GamePage'
+import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
+import { initProfilePage, ProfilePage } from './pages/Profile/ProfilePage'
+import { initTopicPage, TopicPage } from './pages/Topic'
+import {
+  initNotFoundPage,
+  NotFoundPage,
+} from './pages/NotFoundPage/NotFoundPage'
+import {
+  initServerErrorPage,
+  ServerErrorPage,
+} from './pages/ServerErrorPage/ServerErrorPage'
+import { StartPage, initStartPage } from './pages/StartPage'
+import { SignInPage, SignUpPage } from './pages/Auth'
+import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
 export type PageInitContext = {
   clientToken?: string
@@ -21,9 +34,52 @@ export const routes = [
     fetchData: initMainPage,
   },
   {
-    path: '/friends',
-    Component: FriendsPage,
-    fetchData: initFriendsPage,
+    path: '/sign-in',
+    Component: SignInPage,
+  },
+  {
+    path: '/sign-up',
+    Component: SignUpPage,
+  },
+  {
+    path: '/profile',
+    Component: ProfilePage,
+    fetchData: initProfilePage,
+  },
+  {
+    path: '/game',
+    Component: GamePage,
+    fetchData: () => Promise.resolve(),
+  },
+  {
+    path: '/leaderboard',
+    Component: LeaderboardPage,
+    fetchData: initLeaderboardPage,
+  },
+  {
+    path: '/forum',
+    Component: ForumPage,
+    fetchData: initForumPage,
+  },
+  {
+    path: '/forum/submit',
+    Component: SubmitTopicPage,
+    fetchData: initSubmitTopicPage,
+  },
+  {
+    path: '/forum/:topicId',
+    Component: TopicPage,
+    fetchData: initTopicPage,
+  },
+  {
+    path: '/start',
+    Component: StartPage,
+    fetchData: initStartPage,
+  },
+  {
+    path: '/505',
+    Component: ServerErrorPage,
+    fetchData: initServerErrorPage,
   },
   {
     path: '*',
