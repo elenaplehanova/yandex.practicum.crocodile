@@ -1,8 +1,15 @@
+@use '@styles/_extend.scss' as *;
+
+.wrapper {
+  @extend %wrapper;
+}
+
 .root {
-  min-height: 100vh;
+  min-height: calc(100vh - 56px);
 }
 
 .form {
+  @extend %form-block;
   display: flex;
   flex-direction: column;
   row-gap: 16px;

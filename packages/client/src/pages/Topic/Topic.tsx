@@ -10,13 +10,21 @@ import {
 import { useState } from 'react'
 import { usePage } from '../../hooks/usePage'
 import styles from './Topic.module.scss'
+import { Header } from '@components/Header'
+import { Helmet } from 'react-helmet'
 
 export const TopicPage = () => {
   usePage({ initPage: initTopicPage })
   const [isFormExpanded, setIsFormExpanded] = useState(false)
 
   return (
-    <div>
+    <div className={styles['wrapper']}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Forum: theme name</title>
+        <meta name="description" content="Страница темы форума" />
+      </Helmet>
+      <Header />
       <Box className={styles['root']}>
         <Flex direction="column" gapRow="4">
           <Text variant="header-2">Название темы</Text>

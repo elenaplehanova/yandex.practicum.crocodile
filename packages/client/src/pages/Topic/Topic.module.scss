@@ -1,3 +1,11 @@
+@use '@styles/_extend' as *;
+
+.wrapper {
+  @extend %wrapper;
+}
+
 .root {
-  padding: 24px 0;
+  @extend %form-block;
+  padding: 20px;
+  margin: 20px;
 }
