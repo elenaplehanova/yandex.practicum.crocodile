@@ -30,7 +30,6 @@
     "redux": "^4.2.1",
     "sass": "^1.90.0",
     "serialize-javascript": "^6.0.1",
-    "styled-components": "^6.1.0",
     "vite": "^4.4.9"
   },
   "devDependencies": {
@@ -44,7 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "@vitejs/plugin-react": "^2.0.1",
-    "babel-plugin-styled-components": "^2.1.4",
     "cross-env": "^7.0.3",
     "eslint": "^8.23.0",
     "identity-obj-proxy": "^3.0.0",

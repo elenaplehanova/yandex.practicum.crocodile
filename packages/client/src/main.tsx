@@ -9,7 +9,6 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import { ThemeProvider } from '@gravity-ui/uikit'
-import { StyleSheetManager } from 'styled-components'
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -20,17 +19,17 @@ if ('serviceWorker' in navigator) {
   })
 }
 
-const router = createBrowserRouter(routes)
+const router = createBrowserRouter(routes, {
+  hydrationData: (window as any).__staticRouterHydrationData,
+})
 
 ReactDOM.hydrateRoot(
   document.getElementById('root') as HTMLElement,
-  <StyleSheetManager>
-    <ErrorBoundary fallback={<p>Что-то пошло не так</p>}>
-      <Provider store={store}>
-        <ThemeProvider theme="light">
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </Provider>
-    </ErrorBoundary>
-  </StyleSheetManager>
+  <ErrorBoundary fallback={<p>Что-то пошло не так</p>}>
+    <Provider store={store}>
+      <ThemeProvider theme="light">
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
+  </ErrorBoundary>
 )
