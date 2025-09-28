@@ -17,7 +17,7 @@ export default defineConfig({
     outDir: path.join(__dirname, 'dist/client'),
   },
   ssr: {
-    format: 'esm',
+    format: 'cjs',
     noExternal: ['@gravity-ui/uikit'],
   },
   plugins: [
