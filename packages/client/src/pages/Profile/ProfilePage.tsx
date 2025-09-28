@@ -13,6 +13,8 @@ import { API_URL } from '../../constants'
 import React from 'react'
 import { ChangePasswordModal } from '../../components/ChangePasswordModal/ChangePasswordModal'
 import styles from './ProfilePage.module.scss'
+import { Helmet } from 'react-helmet'
+import { Header } from '@components/Header'
 
 export const ProfilePage = () => {
   const [newFirstName, setNewFirstName] = useState('')
@@ -139,68 +141,75 @@ export const ProfilePage = () => {
   }
 
   return (
-    <div className={styles['profile-page']}>
-      <Container maxWidth="m">
-        <Text variant="header-2" className={styles['profile-page__title']}>
-          Профиль
-        </Text>
-        <Flex direction="column" gap="4">
-          <Flex gap="2" className={styles['profile-page__avatar']}>
-            <Avatar alt={newFirstName} size="xl" imgUrl={avatarPreview} />
-            <AvatarUpdate />
+    <div className={styles['wrapper']}>
+      <Helmet>
+        <title>Профиль</title>
+        <meta name="description" content="Страница профиля" />
+      </Helmet>
+      <Header />
+      <div className={styles['profile-page']}>
+        <Container maxWidth="m">
+          <Text variant="header-2" className={styles['profile-page__title']}>
+            Профиль
+          </Text>
+          <Flex direction="column" gap="4">
+            <Flex gap="2" className={styles['profile-page__avatar']}>
+              <Avatar alt={newFirstName} size="xl" imgUrl={avatarPreview} />
+              <AvatarUpdate />
+            </Flex>
           </Flex>
-        </Flex>
-        <Text variant="body-1" className={styles['profile-page__noty']}>
-          {message}
-        </Text>
-        <Flex direction="column" gap="4">
-          <Flex gap="2">
-            <TextInput
-              placeholder="Имя"
-              value={newFirstName}
-              onChange={e => setNewFirstName(e.target.value)}
-            />
-            <TextInput
-              placeholder="Фамилия"
-              value={newSecondName}
-              onChange={e => setNewSecondName(e.target.value)}
-            />
+          <Text variant="body-1" className={styles['profile-page__noty']}>
+            {message}
+          </Text>
+          <Flex direction="column" gap="4">
+            <Flex gap="2">
+              <TextInput
+                placeholder="Имя"
+                value={newFirstName}
+                onChange={e => setNewFirstName(e.target.value)}
+              />
+              <TextInput
+                placeholder="Фамилия"
+                value={newSecondName}
+                onChange={e => setNewSecondName(e.target.value)}
+              />
+            </Flex>
+            <Flex gap="2">
+              <TextInput
+                placeholder="Никнейм"
+                value={newDisplayName}
+                onChange={e => setNewDisplayName(e.target.value)}
+              />
+              <TextInput
+                placeholder="Логин"
+                value={newLogin}
+                onChange={e => setNewLogin(e.target.value)}
+              />
+            </Flex>
+            <Flex gap="2">
+              <TextInput
+                placeholder="Email"
+                value={newEmail}
+                onChange={e => setNewEmail(e.target.value)}
+              />
+              <TextInput
+                placeholder="Телефон"
+                value={newPhone}
+                onChange={e => setNewPhone(e.target.value)}
+              />
+            </Flex>
+            <Button view="action" onClick={handleProfileUpdate}>
+              Обновить профиль
+            </Button>
           </Flex>
-          <Flex gap="2">
-            <TextInput
-              placeholder="Никнейм"
-              value={newDisplayName}
-              onChange={e => setNewDisplayName(e.target.value)}
-            />
-            <TextInput
-              placeholder="Логин"
-              value={newLogin}
-              onChange={e => setNewLogin(e.target.value)}
-            />
+          <Flex
+            direction="column"
+            gap="4"
+            className={styles['profile-page__password_link']}>
+            <ChangePasswordModal />
           </Flex>
-          <Flex gap="2">
-            <TextInput
-              placeholder="Email"
-              value={newEmail}
-              onChange={e => setNewEmail(e.target.value)}
-            />
-            <TextInput
-              placeholder="Телефон"
-              value={newPhone}
-              onChange={e => setNewPhone(e.target.value)}
-            />
-          </Flex>
-          <Button view="action" onClick={handleProfileUpdate}>
-            Обновить профиль
-          </Button>
-        </Flex>
-        <Flex
-          direction="column"
-          gap="4"
-          className={styles['profile-page__password_link']}>
-          <ChangePasswordModal />
-        </Flex>
-      </Container>
+        </Container>
+      </div>
     </div>
   )
 }
