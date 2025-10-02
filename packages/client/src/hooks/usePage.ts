@@ -34,10 +34,21 @@ export const usePage = ({ initPage }: PageProps) => {
   const store = useStore()
 
   useEffect(() => {
-    if (pageHasBeenInitializedOnServer) {
-      dispatch(setPageHasBeenInitializedOnServer(false))
-      return
+    const runInit = async () => {
+      if (pageHasBeenInitializedOnServer) {
+        dispatch(setPageHasBeenInitializedOnServer(false))
+        return
+      }
+
+      if (initPage) {
+        await initPage({
+          dispatch,
+          state: store.getState(),
+          ctx: createContext(),
+        })
+      }
     }
-    initPage({ dispatch, state: store.getState(), ctx: createContext() })
-  }, [])
+
+    runInit()
+  }, [dispatch, initPage, pageHasBeenInitializedOnServer, store])
 }

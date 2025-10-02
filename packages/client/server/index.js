@@ -59,7 +59,7 @@ async function createServer() {
             // Создаём переменные
             let render;
             let template;
-            if (vite) {
+            if (vite && isDev) {
                 template = await promises_1.default.readFile(path_1.default.resolve(clientPath, 'index.html'), 'utf-8');
                 // Применяем встроенные HTML-преобразования vite и плагинов
                 template = await vite.transformIndexHtml(url, template);
@@ -88,8 +88,11 @@ async function createServer() {
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
         }
         catch (e) {
-            vite.ssrFixStacktrace(e);
+            if (isDev) {
+                vite.ssrFixStacktrace(e);
+            }
             next(e);
+            console.dir(e);
         }
     });
     app.listen(port, () => {

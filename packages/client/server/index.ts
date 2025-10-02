@@ -46,7 +46,7 @@ async function createServer() {
         styleTags: string
       }>
       let template: string
-      if (vite) {
+      if (vite && isDev) {
         template = await fs.readFile(
           path.resolve(clientPath, 'index.html'),
           'utf-8'
@@ -104,8 +104,12 @@ async function createServer() {
       // Завершаем запрос и отдаём HTML-страницу
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
-      vite.ssrFixStacktrace(e as Error)
+      if (isDev) {
+        vite!.ssrFixStacktrace(e as Error)
+      }
       next(e)
+
+      console.dir(e)
     }
   })
 
