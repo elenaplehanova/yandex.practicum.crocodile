@@ -9,8 +9,9 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import { ThemeProvider } from '@gravity-ui/uikit'
+import { ClientOnly } from '@components/ClientOnly'
 
-if ('serviceWorker' in navigator) {
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/custom-sw.js')
@@ -19,17 +20,20 @@ if ('serviceWorker' in navigator) {
   })
 }
 
-const router = createBrowserRouter(routes, {
-  hydrationData: (window as any).__staticRouterHydrationData,
-})
+if (typeof window !== 'undefined') {
+  const hydrationData = (window as any).__staticRouterHydrationData || {}
+  const router = createBrowserRouter(routes, { hydrationData })
 
-ReactDOM.hydrateRoot(
-  document.getElementById('root') as HTMLElement,
-  <ErrorBoundary fallback={<p>Что-то пошло не так</p>}>
-    <Provider store={store}>
-      <ThemeProvider theme="light">
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </Provider>
-  </ErrorBoundary>
-)
+  ReactDOM.hydrateRoot(
+    document.getElementById('root') as HTMLElement,
+    <ErrorBoundary fallback={<p>Что-то пошло не так</p>}>
+      <Provider store={store}>
+        <ClientOnly>
+          <ThemeProvider theme="light">
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </ClientOnly>
+      </Provider>
+    </ErrorBoundary>
+  )
+}
