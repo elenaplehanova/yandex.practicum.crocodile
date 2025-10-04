@@ -15,6 +15,9 @@ import { ChangePasswordModal } from '../../components/ChangePasswordModal/Change
 import styles from './ProfilePage.module.scss'
 import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
+import { useDispatch } from '../../store'
+import { logoutThunk } from '../../slices/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 export const ProfilePage = () => {
   const [newFirstName, setNewFirstName] = useState('')
@@ -27,21 +30,21 @@ export const ProfilePage = () => {
   const [avatarPreview, setAvatarPreview] = useState('')
   const [message, setMessage] = useState('')
 
-  const tempUserLogin = async () => {
-    // временное решение пока не реализована авторизация / регистрация
-    const response = await fetch(`${API_URL}/auth/signin`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        login: 'dizman',
-        password: 'Siteadmin1',
-      }),
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const checkAuth = async () => {
+    const response = await fetch(`${API_URL}/auth/user`, {
+      method: 'GET',
       credentials: 'include',
     })
-    const data = await response.text()
-    return data
+
+    if (response.ok) {
+      return true
+    } else {
+      navigate('/sign-in')
+      return false
+    }
   }
 
   const getUserInfo = async () => {
@@ -52,6 +55,13 @@ export const ProfilePage = () => {
       },
       credentials: 'include',
     })
+
+    if (!response.ok) {
+      throw new Error(
+        `Ошибка получения данных пользователя: ${response.status}`
+      )
+    }
+
     const data = await response.json()
     return data
   }
@@ -59,24 +69,26 @@ export const ProfilePage = () => {
   usePage({ initPage: initProfilePage })
 
   useEffect(() => {
-    tempUserLogin().then(() => {
-      getUserInfo()
-        .then(data => {
-          setNewFirstName(data.first_name)
-          setNewSecondName(data.second_name)
-          setNewDisplayName(data.display_name)
-          setNewLogin(data.login)
-          setNewEmail(data.email)
-          setNewPhone(data.phone)
-          setNewAvatar(data.avatar)
-          setAvatarPreview(API_URL + '/resources/' + data.avatar)
-          setMessage('')
-        })
-        .catch(error => {
-          setMessage(
-            'Ошибка при загрузке информации о пользователе: ' + error.message
-          )
-        })
+    checkAuth().then(isAuthenticated => {
+      if (isAuthenticated) {
+        getUserInfo()
+          .then(data => {
+            setNewFirstName(data.first_name)
+            setNewSecondName(data.second_name)
+            setNewDisplayName(data.display_name)
+            setNewLogin(data.login)
+            setNewEmail(data.email)
+            setNewPhone(data.phone)
+            setNewAvatar(data.avatar)
+            setAvatarPreview(API_URL + '/resources/' + data.avatar)
+            setMessage('')
+          })
+          .catch(error => {
+            setMessage(
+              'Ошибка при загрузке информации о пользователе: ' + error.message
+            )
+          })
+      }
     })
   }, [])
 
@@ -96,21 +108,35 @@ export const ProfilePage = () => {
         phone: newPhone,
       }),
     })
-      .then(() => {
-        getUserInfo().then(data => {
-          setNewFirstName(data.first_name)
-          setNewSecondName(data.second_name)
-          setNewDisplayName(data.display_name)
-          setNewLogin(data.login)
-          setNewEmail(data.email)
-          setNewPhone(data.phone)
-          setAvatarPreview(API_URL + '/resources/' + data.avatar)
-          setMessage('Профиль обновлен')
-        })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Ошибка обновления профиля: ${response.status}`)
+        }
+        return getUserInfo()
+      })
+      .then(data => {
+        setNewFirstName(data.first_name)
+        setNewSecondName(data.second_name)
+        setNewDisplayName(data.display_name)
+        setNewLogin(data.login)
+        setNewEmail(data.email)
+        setNewPhone(data.phone)
+        setAvatarPreview(API_URL + '/resources/' + data.avatar)
+        setMessage('Профиль обновлен')
       })
       .catch(error => {
         setMessage('Ошибка при обновлении профиля: ' + error.message)
       })
+  }
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutThunk())
+      navigate('/sign-in')
+    } catch (error) {
+      console.error('Ошибка при выходе:', error)
+      setMessage('Ошибка при выходе из системы')
+    }
   }
 
   const AvatarUpdate = () => {
@@ -200,6 +226,9 @@ export const ProfilePage = () => {
             </Flex>
             <Button view="action" onClick={handleProfileUpdate}>
               Обновить профиль
+            </Button>
+            <Button view="outlined-danger" onClick={handleLogout}>
+              Выйти
             </Button>
           </Flex>
           <Flex

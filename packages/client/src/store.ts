@@ -12,6 +12,7 @@ import ssrReducer from './slices/ssrSlice'
 import userReducer from './slices/userSlice'
 import { api } from './slices/apiSlice'
 import gameReducer from './slices/gameSlice'
+import leaderboardReducer from './slices/leaderboardSlice'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -27,6 +28,7 @@ export const reducer = combineReducers({
   ssr: ssrReducer,
   user: userReducer,
   game: gameReducer,
+  leaderboard: leaderboardReducer,
 })
 
 export const store = configureStore({
