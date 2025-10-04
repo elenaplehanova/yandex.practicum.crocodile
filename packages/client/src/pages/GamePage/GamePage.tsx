@@ -7,13 +7,20 @@ import { Button, Modal } from '@gravity-ui/uikit'
 import { useDispatch, useSelector } from '../../store'
 import { RootState } from '../../store'
 import { addPlayedWord, decrementTime, setShowResults } from '@slices/gameSlice'
+import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import s from './GamePage.module.scss'
 import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
 import { ResultsModal } from '@components/ResultsModal/ResultsModal'
 import { GameState } from '../../types/game'
+import { PageInitArgs } from '../../routes'
 
-const initGame = () => Promise.resolve()
+const initGame = ({ dispatch, state }: PageInitArgs) => {
+  if (!selectUser(state)) {
+    return dispatch(fetchUserThunk())
+  }
+  return Promise.resolve()
+}
 
 export const GamePage = () => {
   usePage({ initPage: initGame })
@@ -82,7 +89,7 @@ export const GamePage = () => {
 
   useEffect(() => {
     if (isCorrect === true) {
-      dispatch(addPlayedWord({ word: currentWord, guessed: true }))
+      // Слово уже добавлено в gameSlice.checkWord, просто переходим к следующему
       onNextWord()
     }
   }, [isCorrect])
@@ -123,7 +130,7 @@ export const GamePage = () => {
   }
 
   const handleNextWord = () => {
-    dispatch(addPlayedWord({ word: currentWord, guessed: false }))
+    // Слово будет добавлено в gameSlice.nextWord, просто переходим к следующему
     onNextWord()
   }
 

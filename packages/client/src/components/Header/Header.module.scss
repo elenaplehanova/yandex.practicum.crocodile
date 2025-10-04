@@ -13,6 +13,9 @@
   &__menu {
     margin: auto;
     margin-right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
   &__links-list {
     display: flex;
@@ -29,5 +32,17 @@
         text-decoration: underline;
       }
     }
+  }
+  &__user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  &__user-name {
+    color: var(--g-color-text-primary);
+    font-size: 14px;
+  }
+  &__logout-btn {
+    flex-shrink: 0;
   }
 }
