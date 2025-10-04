@@ -68,6 +68,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     credentials: 'include',
+    fetchFn: typeof window !== 'undefined' ? fetch : undefined,
     responseHandler: async response => {
       const contentType = response.headers.get('content-type')
       if (contentType?.includes('application/json')) {
