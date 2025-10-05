@@ -1,11 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import {
-  useSubmitLeaderboardMutation,
-  LeaderboardData,
-  LeaderboardSubmitPayload,
-  api,
-} from './apiSlice'
+import { LeaderboardData, LeaderboardSubmitPayload, api } from './apiSlice'
 import { selectUser, fetchUserThunk } from './userSlice'
 import { selectGuessedWordsCount, selectFirstGuessWinsCount } from './gameSlice'
 

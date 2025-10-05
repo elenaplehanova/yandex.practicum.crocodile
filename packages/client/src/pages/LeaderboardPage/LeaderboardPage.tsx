@@ -4,14 +4,10 @@ import { Header } from '@components/Header'
 import { PageInitArgs } from 'routes'
 import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import { usePage } from '@hooks/usePage'
-import {
-  LeaderboardTable,
-  type LeaderboardData,
-} from '@components/LeaderboardTable'
+import { LeaderboardTable } from '@components/LeaderboardTable'
 import { useDispatch, useSelector } from '../../store'
 import { fetchLeaderboardThunk } from '@slices/leaderboardThunks'
 import {
-  selectLeaderboardData,
   selectLeaderboardLoading,
   selectLeaderboardError,
 } from '@slices/leaderboardSlice'
@@ -22,7 +18,6 @@ export const LeaderboardPage = () => {
   usePage({ initPage: initLeaderboardPage })
 
   const dispatch = useDispatch()
-  const data = useSelector(selectLeaderboardData)
   const isLoading = useSelector(selectLeaderboardLoading)
   const error = useSelector(selectLeaderboardError)
 
@@ -59,7 +54,7 @@ export const LeaderboardPage = () => {
           ) : error ? (
             <div>Ошибка: {error}</div>
           ) : (
-            <LeaderboardTable data={data || []} />
+            <LeaderboardTable />
           )}
         </div>
       </div>
