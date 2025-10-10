@@ -22,6 +22,25 @@ interface SignUpResponse {
   id: number
 }
 
+interface ServiceIdResponse {
+  service_id: string
+}
+
+interface OAuthRequestPayload {
+  code: string
+  redirect_uri: string
+}
+
+interface UserResponse {
+  id: number
+  first_name: string
+  second_name: string
+  login: string
+  email: string
+  phone: string
+  avatar: string
+}
+
 interface LeaderboardData {
   name: string
   count: number
@@ -62,8 +81,9 @@ const API_VERSION = 'v2'
 
 const API_URL = `${API_BASE_URL}/${API_VERSION}`
 const AUTH_URL = '/auth'
+const OAUTH_URL = '/oauth/yandex'
 
-export const api = createApi({
+const authApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
@@ -90,6 +110,28 @@ export const api = createApi({
         url: `${AUTH_URL}/signup`,
         method: 'POST',
         body,
+      }),
+    }),
+    getYandexServiceId: builder.query<ServiceIdResponse, void>({
+      query: () => ({
+        url: `${OAUTH_URL}/service-id`,
+        method: 'GET',
+      }),
+    }),
+    signInWithYandexId: builder.mutation<
+      ErrorResponse | void,
+      OAuthRequestPayload
+    >({
+      query: body => ({
+        url: `${OAUTH_URL}`,
+        method: 'POST',
+        body,
+      }),
+    }),
+    getUser: builder.query<UserResponse, void>({
+      query: () => ({
+        url: `${AUTH_URL}/user`,
+        method: 'GET',
       }),
     }),
     submitLeaderboard: builder.mutation<
@@ -131,7 +173,9 @@ export const {
   useFetchLeaderboardMutation,
   useFetchUserQuery,
   useLogoutMutation,
-} = api
+  useSignInWithYandexIdMutation,
+  useGetUserQuery,
+} = authApi
 
 export type {
   LeaderboardData,
@@ -140,3 +184,5 @@ export type {
   LeaderboardResponse,
   UserResponse,
 }
+
+export default authApi

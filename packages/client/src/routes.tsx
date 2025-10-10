@@ -14,7 +14,7 @@ import {
   ServerErrorPage,
 } from './pages/ServerErrorPage/ServerErrorPage'
 import { StartPage, initStartPage } from './pages/StartPage'
-import { SignInPage, SignUpPage } from './pages/Auth'
+import { SignInPage, SignUpPage, OAuthCallbackPage } from './pages/Auth'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
 export type PageInitContext = {
@@ -40,6 +40,10 @@ export const routes = [
   {
     path: '/sign-up',
     Component: SignUpPage,
+  },
+  {
+    path: '/oauth',
+    Component: OAuthCallbackPage,
   },
   {
     path: '/profile',

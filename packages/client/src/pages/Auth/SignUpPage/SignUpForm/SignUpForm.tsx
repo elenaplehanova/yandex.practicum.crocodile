@@ -4,10 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import { TextInput, Button } from '@gravity-ui/uikit'
 
-import {
-  useSignUpMutation,
-  type ErrorResponse,
-} from '../../../../slices/apiSlice'
+import { useSignUpMutation, type ErrorResponse } from '@apis/authApi'
 import { getErrorTranslation, InputNames, VALIDATOR } from '../../../../utils'
 import type { InputProps, SignUpFormValues } from './SignUpForm.types'
 import styles from './SignUpForm.module.scss'

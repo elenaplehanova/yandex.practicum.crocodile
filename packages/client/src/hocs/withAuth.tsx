@@ -1,3 +1,4 @@
+import { Loader } from '@gravity-ui/uikit'
 import { useAuth } from '@hooks/useAuth'
 import { ComponentType, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -6,17 +7,17 @@ export const withAuth = <P extends Record<string, unknown>>(
   Component: ComponentType<P>
 ) => {
   return (props: P) => {
-    const { isAuth } = useAuth()
+    const { isAuth, isLoading } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
-      if (!isAuth) {
-        navigate('/sign-in')
+      if (!isLoading && !isAuth) {
+        navigate('/sign-in', { replace: true })
       }
-    }, [isAuth, navigate])
+    }, [isLoading, isAuth, navigate])
 
-    if (!isAuth) {
-      return null
+    if (isLoading || !isAuth) {
+      return <Loader />
     }
 
     return <Component {...props} />
