@@ -10,7 +10,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
 import userReducer from './slices/userSlice'
-import { api } from './slices/apiSlice'
+import authApi from './apis/authApi'
 import gameReducer from './slices/gameSlice'
 
 // Глобально декларируем в window наш ключик
@@ -22,7 +22,7 @@ declare global {
 }
 
 export const reducer = combineReducers({
-  [api.reducerPath]: api.reducer,
+  [authApi.reducerPath]: authApi.reducer,
   friends: friendsReducer,
   ssr: ssrReducer,
   user: userReducer,
@@ -31,7 +31,7 @@ export const reducer = combineReducers({
 
 export const store = configureStore({
   reducer,
-  middleware: gDM => gDM().concat(api.middleware),
+  middleware: gDM => gDM().concat(authApi.middleware),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })

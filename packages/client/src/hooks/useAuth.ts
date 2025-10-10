@@ -1,9 +1,23 @@
-import { selectUser } from '@slices/userSlice'
-import { useSelector } from 'react-redux'
+import { useGetUserQuery } from '@apis/authApi'
 
 export const useAuth = () => {
-  const user = useSelector(selectUser)
-  const isAuth = !!user
+  const {
+    data: user,
+    isLoading,
+    error,
+    isSuccess,
+    refetch,
+  } = useGetUserQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  })
 
-  return { user, isAuth }
+  const isAuth = isSuccess && !!user
+
+  return {
+    user,
+    isAuth,
+    isLoading,
+    error,
+    refetch,
+  }
 }
