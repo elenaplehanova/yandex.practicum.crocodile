@@ -1,9 +1,14 @@
 import { PlayedWord } from '@slices/gameSlice'
 import s from './ResultsModal.module.scss'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { Button } from '@gravity-ui/uikit'
 import { useNavigate } from 'react-router-dom'
 import { useGameStatus } from '@hooks/useGameStatus'
+import { useDispatch } from '../../store'
+import {
+  saveGameResultsThunk,
+  fetchLeaderboardThunk,
+} from '@slices/leaderboardThunks'
 
 export interface IResultsModalProps {
   playedWords: PlayedWord[]
@@ -11,8 +16,25 @@ export interface IResultsModalProps {
 
 export function ResultsModal({ playedWords }: IResultsModalProps) {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const { onStartNewGame } = useGameStatus()
+
+  useEffect(() => {
+    if (playedWords.length > 0) {
+      const saveResults = async () => {
+        try {
+          const result = await dispatch(saveGameResultsThunk())
+          if (result.type === 'leaderboard/saveGameResults/fulfilled') {
+            dispatch(fetchLeaderboardThunk())
+          }
+        } catch (error) {
+          // Ошибка при сохранении результатов
+        }
+      }
+      saveResults()
+    }
+  }, [dispatch, playedWords.length])
 
   const guessedWords = useMemo(
     () => playedWords.filter(item => item?.guessed),
@@ -84,6 +106,13 @@ export function ResultsModal({ playedWords }: IResultsModalProps) {
           onClick={onStartNewGame}
           className={s['results-modal__button']}>
           Начать заново
+        </Button>
+        <Button
+          size="xl"
+          view="outlined"
+          onClick={() => navigate('/leaderboard')}
+          className={s['results-modal__button']}>
+          Лидерборд
         </Button>
         <Button
           size="xl"
