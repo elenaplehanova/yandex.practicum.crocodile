@@ -1,18 +1,19 @@
-import s from './LeaderboardPage.module.scss'
 import { Helmet } from 'react-helmet'
+import { Button } from '@gravity-ui/uikit'
+
 import { Header } from '@components/Header'
-import { PageInitArgs } from 'routes'
-import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import { usePage } from '@hooks/usePage'
 import { LeaderboardTable } from '@components/LeaderboardTable'
-import { useDispatch, useSelector } from '../../store'
 import { fetchLeaderboardThunk } from '@slices/leaderboardThunks'
+import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import {
   selectLeaderboardLoading,
   selectLeaderboardError,
+  selectLeaderboardData,
 } from '@slices/leaderboardSlice'
-import { useEffect } from 'react'
-import { Button } from '@gravity-ui/uikit'
+import { PageInitArgs } from 'routes'
+import { useDispatch, useSelector } from '../../store'
+import s from './LeaderboardPage.module.scss'
 
 export const LeaderboardPage = () => {
   usePage({ initPage: initLeaderboardPage })
@@ -20,10 +21,6 @@ export const LeaderboardPage = () => {
   const dispatch = useDispatch()
   const isLoading = useSelector(selectLeaderboardLoading)
   const error = useSelector(selectLeaderboardError)
-
-  useEffect(() => {
-    dispatch(fetchLeaderboardThunk())
-  }, [dispatch])
 
   const handleRefresh = () => {
     dispatch(fetchLeaderboardThunk())
@@ -66,8 +63,15 @@ export const initLeaderboardPage = async ({
   dispatch,
   state,
 }: PageInitArgs) => {
+  const queue: Array<Promise<unknown>> = []
+
   if (!selectUser(state)) {
-    return dispatch(fetchUserThunk())
+    queue.push(dispatch(fetchUserThunk()))
   }
-  dispatch(fetchLeaderboardThunk())
+
+  if (!selectLeaderboardData(state).length) {
+    queue.push(dispatch(fetchLeaderboardThunk()))
+  }
+
+  return Promise.all(queue)
 }
