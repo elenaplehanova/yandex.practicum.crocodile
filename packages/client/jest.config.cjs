@@ -20,6 +20,7 @@ module.exports = {
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^@slices/(.*)$': '<rootDir>/src/slices/$1',
+    '^@apis/(.*)$': '<rootDir>/src/apis/$1',
   },
   transform: {
     '^.+\\.tsx?$': 'ts-jest',

@@ -59,6 +59,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
+      '@apis': path.resolve(__dirname, 'src/apis'),
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@slices': path.resolve(__dirname, 'src/slices'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),

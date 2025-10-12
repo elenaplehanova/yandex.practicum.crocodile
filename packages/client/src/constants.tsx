@@ -5,4 +5,8 @@ export const SERVER_HOST =
     ? __INTERNAL_SERVER_URL__
     : __EXTERNAL_SERVER_URL__
 
-export const API_URL = 'https://ya-praktikum.tech/api/v2'
+export const PROTOCOL_HTTPS = 'https://'
+export const DOMAIN = 'ya-praktikum.tech'
+export const API_BASE_URL = `${PROTOCOL_HTTPS}${DOMAIN}/api`
+export const API_VERSION = 'v2'
+export const API_URL = `${API_BASE_URL}/${API_VERSION}`
