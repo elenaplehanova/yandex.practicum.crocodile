@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useYandexOAuth } from '../../../hooks/useYandexOAuth'
-import { Flex } from '@gravity-ui/uikit'
+import { useYandexOAuth } from '@hooks/useYandexOAuth'
 import { AuthLayout } from '../AuthLayout'
-import { SignInForm } from '../SignInPage/SignInForm'
 
 export const OAuthCallbackPage = () => {
   const [searchParams] = useSearchParams()

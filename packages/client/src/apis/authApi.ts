@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { API_URL } from '../constants'
 
 export interface ErrorResponse {
   reason: string
@@ -35,38 +36,6 @@ interface UserResponse {
   id: number
   first_name: string
   second_name: string
-  login: string
-  email: string
-  phone: string
-  avatar: string
-}
-
-interface LeaderboardData {
-  name: string
-  count: number
-  firstGuessWins: number
-}
-
-interface LeaderboardSubmitPayload {
-  data: LeaderboardData
-  ratingFieldName: string
-}
-
-interface LeaderboardFetchPayload {
-  ratingFieldName: string
-  cursor: number
-  limit: number
-}
-
-interface LeaderboardResponse {
-  [x: string]: any
-  data: LeaderboardData[]
-}
-
-interface UserResponse {
-  id: number
-  first_name: string
-  second_name: string
   display_name: string
   login: string
   email: string
@@ -74,12 +43,6 @@ interface UserResponse {
   avatar: string
 }
 
-const PROTOCOL_HTTPS = 'https://'
-const DOMAIN = 'ya-praktikum.tech'
-const API_BASE_URL = `${PROTOCOL_HTTPS}${DOMAIN}/api`
-const API_VERSION = 'v2'
-
-const API_URL = `${API_BASE_URL}/${API_VERSION}`
 const AUTH_URL = '/auth'
 const OAUTH_URL = '/oauth/yandex'
 
@@ -134,29 +97,6 @@ const authApi = createApi({
         method: 'GET',
       }),
     }),
-    submitLeaderboard: builder.mutation<
-      ErrorResponse | null,
-      LeaderboardSubmitPayload
-    >({
-      query: body => ({
-        url: '/leaderboard',
-        method: 'POST',
-        body,
-      }),
-    }),
-    fetchLeaderboard: builder.mutation<
-      LeaderboardResponse,
-      LeaderboardFetchPayload
-    >({
-      query: body => ({
-        url: '/leaderboard/all',
-        method: 'POST',
-        body,
-      }),
-    }),
-    fetchUser: builder.query<UserResponse, void>({
-      query: () => '/auth/user',
-    }),
     logout: builder.mutation<ErrorResponse | null, void>({
       query: () => ({
         url: '/auth/logout',
@@ -169,20 +109,10 @@ const authApi = createApi({
 export const {
   useSignInMutation,
   useSignUpMutation,
-  useSubmitLeaderboardMutation,
-  useFetchLeaderboardMutation,
-  useFetchUserQuery,
-  useLogoutMutation,
+  useGetYandexServiceIdQuery,
   useSignInWithYandexIdMutation,
   useGetUserQuery,
+  useLogoutMutation,
 } = authApi
-
-export type {
-  LeaderboardData,
-  LeaderboardSubmitPayload,
-  LeaderboardFetchPayload,
-  LeaderboardResponse,
-  UserResponse,
-}
 
 export default authApi

@@ -1,7 +1,7 @@
 import { Table, type TableColumnConfig } from '@gravity-ui/uikit'
 import { FC } from 'react'
 import s from './LeaderboardTable.module.scss'
-import { LeaderboardData } from '@slices/apiSlice'
+import { LeaderboardData } from '@apis/leaderboardApi'
 import { useSelector } from '../../store'
 import { selectLeaderboardData } from '@slices/leaderboardSlice'
 

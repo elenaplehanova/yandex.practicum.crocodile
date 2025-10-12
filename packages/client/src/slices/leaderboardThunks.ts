@@ -1,6 +1,9 @@
+import leaderboardApi, {
+  LeaderboardData,
+  LeaderboardSubmitPayload,
+} from '@apis/leaderboardApi'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { LeaderboardData, LeaderboardSubmitPayload, api } from './apiSlice'
 import { selectUser, fetchUserThunk } from './userSlice'
 import { selectGuessedWordsCount, selectFirstGuessWinsCount } from './gameSlice'
 
@@ -47,7 +50,7 @@ export const saveGameResultsThunk = createAsyncThunk(
 
     try {
       const result = await dispatch(
-        api.endpoints.submitLeaderboard.initiate(payload)
+        leaderboardApi.endpoints.submitLeaderboard.initiate(payload)
       )
 
       if ('data' in result && result.data) {
@@ -90,7 +93,7 @@ export const fetchLeaderboardThunk = createAsyncThunk(
 
     try {
       const result = await dispatch(
-        api.endpoints.fetchLeaderboard.initiate(payload)
+        leaderboardApi.endpoints.fetchLeaderboard.initiate(payload)
       )
 
       if ('data' in result && result.data) {

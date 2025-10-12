@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { LeaderboardData } from './apiSlice'
+import { LeaderboardData } from '@apis/leaderboardApi'
 import {
   saveGameResultsThunk,
   fetchLeaderboardThunk,
@@ -42,7 +42,7 @@ export const leaderboardSlice = createSlice({
         state.isLoading = true
         state.error = null
       })
-      .addCase(saveGameResultsThunk.fulfilled, (state, action) => {
+      .addCase(saveGameResultsThunk.fulfilled, state => {
         state.isLoading = false
         state.error = null
       })
