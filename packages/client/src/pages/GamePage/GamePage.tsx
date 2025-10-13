@@ -15,15 +15,8 @@ import { ResultsModal } from '@components/ResultsModal/ResultsModal'
 import { GameState } from '../../types/game'
 import { PageInitArgs } from '../../routes'
 
-const initGame = ({ dispatch, state }: PageInitArgs) => {
-  if (!selectUser(state)) {
-    return dispatch(fetchUserThunk())
-  }
-  return Promise.resolve()
-}
-
 export const GamePage = () => {
-  usePage({ initPage: initGame })
+  usePage({ initPage: initGamePage })
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -249,4 +242,10 @@ export const GamePage = () => {
       </Modal>
     </>
   )
+}
+
+export const initGamePage = async ({ dispatch, state }: PageInitArgs) => {
+  if (!selectUser(state)) {
+    return dispatch(fetchUserThunk())
+  }
 }
