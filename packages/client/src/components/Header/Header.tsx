@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from '../../store'
 import { Button } from '@gravity-ui/uikit'
 import { logoutThunk } from '@slices/userSlice'
 import { selectUser } from '@slices/userSlice'
+import GetLocation from '@components/GetLocation/GetLocation'
 import s from './Header.module.scss'
 
 type MenuItem = {
@@ -53,6 +54,9 @@ export const Header = () => {
             <span className={s['header__user-name']}>
               {user.name} {user.secondName}
             </span>
+
+            <GetLocation />
+
             <Button
               size="s"
               view="outlined-danger"

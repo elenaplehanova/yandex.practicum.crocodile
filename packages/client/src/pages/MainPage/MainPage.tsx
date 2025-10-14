@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 import s from './MainPage.module.scss'
 import { PlayFill } from '@gravity-ui/icons'
 import { ensureUser } from '@utils/initUser'
-import GetLocation from '@components/GetLocation/GetLocation'
 
 export const MainPage = () => {
   usePage({ initPage: initMainPage })
@@ -24,8 +23,6 @@ export const MainPage = () => {
       </Helmet>
 
       <Header />
-
-      <GetLocation />
 
       <section className={s['main-page__content']}>
         <h1 className={s['main-page__title']}>
