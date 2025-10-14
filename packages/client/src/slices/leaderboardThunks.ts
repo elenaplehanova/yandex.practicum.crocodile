@@ -5,7 +5,11 @@ import leaderboardApi, {
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { selectUser, fetchUserThunk } from './userSlice'
-import { selectGuessedWordsCount, selectFirstGuessWinsCount } from './gameSlice'
+import {
+  selectGuessedWordsCount,
+  selectFirstGuessWinsCount,
+  selectCountry,
+} from './gameSlice'
 
 export const saveGameResultsThunk = createAsyncThunk(
   'leaderboard/saveGameResults',
@@ -31,6 +35,7 @@ export const saveGameResultsThunk = createAsyncThunk(
 
     const guessedWordsCount = selectGuessedWordsCount(state)
     const firstGuessWinsCount = selectFirstGuessWinsCount(state)
+    const country = selectCountry(state)
 
     // Не сохраняем результаты, если не было сыграно ни одного слова
     if (guessedWordsCount === 0) {
@@ -41,6 +46,7 @@ export const saveGameResultsThunk = createAsyncThunk(
       name: `${user.name} ${user.secondName}`,
       count: guessedWordsCount,
       firstGuessWins: firstGuessWinsCount,
+      country: country,
     }
 
     const payload: LeaderboardSubmitPayload = {
