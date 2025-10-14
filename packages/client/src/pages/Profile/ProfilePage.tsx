@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { usePage } from '../../hooks/usePage'
+import React, { useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { useNavigate } from 'react-router-dom'
 import {
   Container,
   Text,
@@ -9,88 +10,29 @@ import {
   Avatar,
   useFileInput,
 } from '@gravity-ui/uikit'
-import { API_URL } from '../../constants'
-import React from 'react'
-import { ChangePasswordModal } from '../../components/ChangePasswordModal/ChangePasswordModal'
-import styles from './ProfilePage.module.scss'
-import { Helmet } from 'react-helmet'
+
+import { usePage } from '@hooks/usePage'
 import { Header } from '@components/Header'
-import { useDispatch } from '../../store'
-import { logoutThunk } from '../../slices/userSlice'
-import { useNavigate } from 'react-router-dom'
+import { ChangePasswordModal } from '@components/ChangePasswordModal/ChangePasswordModal'
+import {
+  fetchUserThunk,
+  selectUser,
+  logoutThunk,
+  updateUserPartially,
+} from '@slices/userSlice'
+import { PageInitArgs } from 'routes'
+import { API_URL } from '../../constants'
+import { useDispatch, useSelector } from '../../store'
+import styles from './ProfilePage.module.scss'
 
 export const ProfilePage = () => {
-  const [newFirstName, setNewFirstName] = useState('')
-  const [newSecondName, setNewSecondName] = useState('')
-  const [newDisplayName, setNewDisplayName] = useState('')
-  const [newLogin, setNewLogin] = useState('')
-  const [newEmail, setNewEmail] = useState('')
-  const [newPhone, setNewPhone] = useState('')
-  const [newAvatar, setNewAvatar] = useState('')
-  const [avatarPreview, setAvatarPreview] = useState('')
   const [message, setMessage] = useState('')
+  const user = useSelector(selectUser)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const checkAuth = async () => {
-    const response = await fetch(`${API_URL}/auth/user`, {
-      method: 'GET',
-      credentials: 'include',
-    })
-
-    if (response.ok) {
-      return true
-    } else {
-      navigate('/sign-in')
-      return false
-    }
-  }
-
-  const getUserInfo = async () => {
-    const response = await fetch(`${API_URL}/auth/user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-
-    if (!response.ok) {
-      throw new Error(
-        `Ошибка получения данных пользователя: ${response.status}`
-      )
-    }
-
-    const data = await response.json()
-    return data
-  }
-
   usePage({ initPage: initProfilePage })
-
-  useEffect(() => {
-    checkAuth().then(isAuthenticated => {
-      if (isAuthenticated) {
-        getUserInfo()
-          .then(data => {
-            setNewFirstName(data.first_name)
-            setNewSecondName(data.second_name)
-            setNewDisplayName(data.display_name)
-            setNewLogin(data.login)
-            setNewEmail(data.email)
-            setNewPhone(data.phone)
-            setNewAvatar(data.avatar)
-            setAvatarPreview(API_URL + '/resources/' + data.avatar)
-            setMessage('')
-          })
-          .catch(error => {
-            setMessage(
-              'Ошибка при загрузке информации о пользователе: ' + error.message
-            )
-          })
-      }
-    })
-  }, [])
 
   const handleProfileUpdate = () => {
     fetch(`${API_URL}/user/profile`, {
@@ -99,31 +41,15 @@ export const ProfilePage = () => {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({
-        first_name: newFirstName,
-        second_name: newSecondName,
-        display_name: newDisplayName,
-        login: newLogin,
-        email: newEmail,
-        phone: newPhone,
-      }),
+      body: JSON.stringify(user),
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Ошибка обновления профиля: ${response.status}`)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Ошибка обновления профиля: ${res.status}`)
         }
-        return getUserInfo()
-      })
-      .then(data => {
-        setNewFirstName(data.first_name)
-        setNewSecondName(data.second_name)
-        setNewDisplayName(data.display_name)
-        setNewLogin(data.login)
-        setNewEmail(data.email)
-        setNewPhone(data.phone)
-        setAvatarPreview(API_URL + '/resources/' + data.avatar)
         setMessage('Профиль обновлен')
       })
+
       .catch(error => {
         setMessage('Ошибка при обновлении профиля: ' + error.message)
       })
@@ -140,7 +66,6 @@ export const ProfilePage = () => {
   }
 
   const AvatarUpdate = () => {
-    const [newAvatar, setNewAvatar] = useState('')
     const onUpdate = React.useCallback(async (files: File[]) => {
       const formData = new FormData()
       formData.append('avatar', files[0] as File)
@@ -151,8 +76,8 @@ export const ProfilePage = () => {
         body: formData,
       })
       const data = await response.json()
-      setNewAvatar(data.avatar)
-      setAvatarPreview(API_URL + '/resources/' + data.avatar)
+      dispatch(updateUserPartially({ avatar: data.avatar }))
+
       setMessage('Аватар изменен')
     }, [])
     const { controlProps, triggerProps } = useFileInput({
@@ -180,7 +105,11 @@ export const ProfilePage = () => {
           </Text>
           <Flex direction="column" gap="4">
             <Flex gap="2" className={styles['profile-page__avatar']}>
-              <Avatar alt={newFirstName} size="xl" imgUrl={avatarPreview} />
+              <Avatar
+                alt={user?.first_name}
+                size="xl"
+                imgUrl={`${API_URL}/resources/${user?.avatar}`}
+              />
               <AvatarUpdate />
             </Flex>
           </Flex>
@@ -191,37 +120,51 @@ export const ProfilePage = () => {
             <Flex gap="2">
               <TextInput
                 placeholder="Имя"
-                value={newFirstName}
-                onChange={e => setNewFirstName(e.target.value)}
+                value={user?.first_name}
+                onChange={e =>
+                  dispatch(updateUserPartially({ first_name: e.target.value }))
+                }
               />
               <TextInput
                 placeholder="Фамилия"
-                value={newSecondName}
-                onChange={e => setNewSecondName(e.target.value)}
+                value={user?.second_name}
+                onChange={e =>
+                  dispatch(updateUserPartially({ second_name: e.target.value }))
+                }
               />
             </Flex>
             <Flex gap="2">
               <TextInput
                 placeholder="Никнейм"
-                value={newDisplayName}
-                onChange={e => setNewDisplayName(e.target.value)}
+                value={user?.display_name}
+                onChange={e =>
+                  dispatch(
+                    updateUserPartially({ display_name: e.target.value })
+                  )
+                }
               />
               <TextInput
                 placeholder="Логин"
-                value={newLogin}
-                onChange={e => setNewLogin(e.target.value)}
+                value={user?.login}
+                onChange={e =>
+                  dispatch(updateUserPartially({ login: e.target.value }))
+                }
               />
             </Flex>
             <Flex gap="2">
               <TextInput
                 placeholder="Email"
-                value={newEmail}
-                onChange={e => setNewEmail(e.target.value)}
+                value={user?.email}
+                onChange={e =>
+                  dispatch(updateUserPartially({ email: e.target.value }))
+                }
               />
               <TextInput
                 placeholder="Телефон"
-                value={newPhone}
-                onChange={e => setNewPhone(e.target.value)}
+                value={user?.phone}
+                onChange={e =>
+                  dispatch(updateUserPartially({ phone: e.target.value }))
+                }
               />
             </Flex>
             <Button view="action" onClick={handleProfileUpdate}>
@@ -243,4 +186,8 @@ export const ProfilePage = () => {
   )
 }
 
-export const initProfilePage = () => Promise.resolve()
+export const initProfilePage = async ({ dispatch, state }: PageInitArgs) => {
+  if (!selectUser(state)) {
+    return dispatch(fetchUserThunk())
+  }
+}

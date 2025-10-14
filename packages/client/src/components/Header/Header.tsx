@@ -51,7 +51,7 @@ export const Header = () => {
         {user && (
           <div className={s['header__user-section']}>
             <span className={s['header__user-name']}>
-              {user.name} {user.secondName}
+              {user.first_name} {user.second_name}
             </span>
             <Button
               size="s"
