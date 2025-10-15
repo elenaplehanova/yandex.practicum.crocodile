@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { API_URL, SERVER_HOST } from '../constants'
+import { API_PROXY_URL } from '../constants'
 
 interface User {
   id: number
@@ -26,7 +26,10 @@ const initialState: UserState = {
 export const fetchUserThunk = createAsyncThunk(
   'user/fetchUserThunk',
   async () => {
-    const response = await fetch(`${SERVER_HOST}/user`)
+    const response = await fetch(`${API_PROXY_URL}/auth/user`, {
+      method: 'GET',
+      credentials: 'include',
+    })
 
     if (!response.ok) {
       throw new Error('Ошибка при получении данных пользователя')
@@ -39,7 +42,7 @@ export const fetchUserThunk = createAsyncThunk(
 )
 
 export const logoutThunk = createAsyncThunk('user/logoutThunk', async () => {
-  const url = `${API_URL}/auth/logout`
+  const url = `${API_PROXY_URL}/auth/logout`
   const response = await fetch(url, {
     method: 'POST',
     credentials: 'include',

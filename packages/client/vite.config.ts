@@ -8,6 +8,15 @@ dotenv.config()
 export default defineConfig({
   server: {
     port: Number(process.env.CLIENT_PORT) || 3000,
+    proxy: {
+      '/api/v2': {
+        changeOrigin: true,
+        cookieDomainRewrite: {
+          '*': '',
+        },
+        target: 'http://localhost:3001',
+      },
+    },
   },
   define: {
     __EXTERNAL_SERVER_URL__: JSON.stringify(process.env.EXTERNAL_SERVER_URL),

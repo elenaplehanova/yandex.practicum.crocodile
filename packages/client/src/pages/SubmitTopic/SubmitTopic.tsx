@@ -1,12 +1,11 @@
 import { Button, Flex, TextArea, TextInput } from '@gravity-ui/uikit'
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { withAuth } from '../../hocs/withAuth'
 import styles from './SubmitTopic.module.scss'
 import { Header } from '@components/Header'
 import { Helmet } from 'react-helmet'
 
-export const SubmitTopicPage: FC = withAuth(() => {
+export const SubmitTopicPage: FC = () => {
   const navigate = useNavigate()
 
   return (
@@ -41,6 +40,6 @@ export const SubmitTopicPage: FC = withAuth(() => {
       </Flex>
     </div>
   )
-})
+}
 
 export const initSubmitTopicPage = () => Promise.resolve()

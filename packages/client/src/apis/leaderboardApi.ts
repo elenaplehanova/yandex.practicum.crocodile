@@ -1,6 +1,6 @@
 import { ErrorResponse } from '@apis/authApi'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { API_URL } from '../constants'
+import { API_PROXY_URL } from '../constants'
 
 interface LeaderboardData {
   name: string
@@ -28,7 +28,7 @@ interface LeaderboardResponse {
 const leaderboardApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: API_PROXY_URL,
     credentials: 'include',
     fetchFn: typeof window !== 'undefined' ? fetch : undefined,
     responseHandler: async response => {

@@ -9,7 +9,6 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import { ThemeProvider } from '@gravity-ui/uikit'
-import { ClientOnly } from '@components/ClientOnly'
 
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -28,11 +27,9 @@ if (typeof window !== 'undefined') {
     document.getElementById('root') as HTMLElement,
     <ErrorBoundary fallback={<p>Что-то пошло не так</p>}>
       <Provider store={store}>
-        <ClientOnly>
-          <ThemeProvider theme="light">
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </ClientOnly>
+        <ThemeProvider theme="light">
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </Provider>
     </ErrorBoundary>
   )
