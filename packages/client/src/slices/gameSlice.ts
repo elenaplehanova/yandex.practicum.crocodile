@@ -196,5 +196,6 @@ export const selectFirstGuessWinsCount = (state: any) =>
   state.game.playedWords.filter(
     (word: PlayedWord) => word.guessed && word.firstGuess
   ).length
+export const selectCountry = (state: any) => state.country
 
 export default gameSlice.reducer
