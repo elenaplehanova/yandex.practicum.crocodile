@@ -6,6 +6,7 @@ interface LeaderboardData {
   name: string
   count: number
   firstGuessWins: number
+  country: string
 }
 
 interface LeaderboardSubmitPayload {

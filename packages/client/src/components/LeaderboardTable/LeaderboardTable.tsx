@@ -21,6 +21,11 @@ export const LeaderboardTable: FC = () => {
       id: 'firstGuessWins',
       name: '(с первой попытки)',
     },
+    {
+      align: 'center',
+      id: 'country',
+      name: 'Страна игрока',
+    },
   ]
 
   const data = useSelector(selectLeaderboardData)
