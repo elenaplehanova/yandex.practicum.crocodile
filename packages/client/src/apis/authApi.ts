@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { API_URL } from '../constants'
+import { API_PROXY_URL } from '../constants'
 
 export interface ErrorResponse {
   reason: string
@@ -49,7 +49,7 @@ const OAUTH_URL = '/oauth/yandex'
 const authApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: API_PROXY_URL,
     credentials: 'include',
     fetchFn: typeof window !== 'undefined' ? fetch : undefined,
     responseHandler: async response => {
@@ -99,7 +99,7 @@ const authApi = createApi({
     }),
     logout: builder.mutation<ErrorResponse | null, void>({
       query: () => ({
-        url: '/auth/logout',
+        url: `${AUTH_URL}/logout`,
         method: 'POST',
       }),
     }),

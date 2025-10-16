@@ -1,4 +1,5 @@
 import { AppDispatch, RootState } from './store'
+import { withAuth } from './hocs/withAuth'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
 import { GamePage, initGamePage } from './pages/GamePage/GamePage'
@@ -30,7 +31,7 @@ export type PageInitArgs = {
 export const routes = [
   {
     path: '/',
-    Component: MainPage,
+    Component: withAuth(MainPage),
     fetchData: initMainPage,
   },
   {
@@ -47,47 +48,47 @@ export const routes = [
   },
   {
     path: '/profile',
-    Component: ProfilePage,
+    Component: withAuth(ProfilePage),
     fetchData: initProfilePage,
   },
   {
     path: '/game',
-    Component: GamePage,
+    Component: withAuth(GamePage),
     fetchData: initGamePage,
   },
   {
     path: '/leaderboard',
-    Component: LeaderboardPage,
+    Component: withAuth(LeaderboardPage),
     fetchData: initLeaderboardPage,
   },
   {
     path: '/forum',
-    Component: ForumPage,
+    Component: withAuth(ForumPage),
     fetchData: initForumPage,
   },
   {
     path: '/forum/submit',
-    Component: SubmitTopicPage,
+    Component: withAuth(SubmitTopicPage),
     fetchData: initSubmitTopicPage,
   },
   {
     path: '/forum/:topicId',
-    Component: TopicPage,
+    Component: withAuth(TopicPage),
     fetchData: initTopicPage,
   },
   {
     path: '/start',
-    Component: StartPage,
+    Component: withAuth(StartPage),
     fetchData: initStartPage,
   },
   {
     path: '/505',
-    Component: ServerErrorPage,
+    Component: withAuth(ServerErrorPage),
     fetchData: initServerErrorPage,
   },
   {
     path: '*',
-    Component: NotFoundPage,
+    Component: withAuth(NotFoundPage),
     fetchData: initNotFoundPage,
   },
 ]
