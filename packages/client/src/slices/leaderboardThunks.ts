@@ -4,7 +4,7 @@ import leaderboardApi, {
 } from '@apis/leaderboardApi'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { SERVER_HOST } from '../constants'
+import { API_PROXY_URL } from '../constants'
 import { selectUser, fetchUserThunk } from './userSlice'
 import {
   selectGuessedWordsCount,
@@ -66,17 +66,14 @@ export const saveGameResultsThunk = createAsyncThunk(
         throw new Error(`Ошибка RTK Query: ${result.error}`)
       }
     } catch (rtkError) {
-      const response = await fetch(
-        'https://ya-praktikum.tech/api/v2/leaderboard',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify(payload),
-        }
-      )
+      const response = await fetch(`${API_PROXY_URL}/leaderboard`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      })
 
       if (!response.ok) {
         throw new Error(`Ошибка при сохранении результатов: ${response.status}`)
@@ -91,15 +88,49 @@ export const saveGameResultsThunk = createAsyncThunk(
 
 export const fetchLeaderboardThunk = createAsyncThunk(
   'leaderboard/fetchLeaderboard',
-  async () => {
-    const response = await fetch(`${SERVER_HOST}/leaderboard`)
-
-    if (!response.ok) {
-      throw new Error('Ошибка при загрузке лидерборда')
+  async (_, { dispatch }) => {
+    // вернул код обратно из серверной части
+    const payload = {
+      ratingFieldName: 'count',
+      cursor: 0,
+      limit: 10,
     }
 
-    const leaderboardData = await response.json()
+    try {
+      const result = await dispatch(
+        leaderboardApi.endpoints.fetchLeaderboard.initiate(payload)
+      )
 
-    return leaderboardData
+      if ('data' in result && result.data) {
+        const extractedData = result.data
+          .map((item: any) => item.data)
+          .filter(Boolean)
+        return extractedData
+      } else if ('error' in result && result.error) {
+        throw new Error(`Ошибка RTK Query: ${result.error}`)
+      }
+    } catch (rtkError) {
+      const response = await fetch(`${API_PROXY_URL}/leaderboard/all`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Ошибка при сохранении результатов: ${response.status}`)
+      }
+      const data = await response.json()
+
+      if (data && Array.isArray(data) && data.length > 0 && data[0].data) {
+        const extractedData = data.map((item: any) => item.data).filter(Boolean)
+
+        return extractedData
+      } else {
+        return data || []
+      }
+    }
   }
 )
