@@ -6,14 +6,15 @@ import WordCard from '../../components/WordCard'
 import { Button, Modal } from '@gravity-ui/uikit'
 import { useDispatch, useSelector } from '../../store'
 import { RootState } from '../../store'
-import { addPlayedWord, decrementTime, setShowResults } from '@slices/gameSlice'
+import { decrementTime, setShowResults } from '@slices/gameSlice'
 import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import s from './GamePage.module.scss'
-import { Helmet } from 'react-helmet'
 import { Header } from '@components/Header'
 import { ResultsModal } from '@components/ResultsModal/ResultsModal'
 import { GameState } from '../../types/game'
 import { PageInitArgs } from '../../routes'
+import { Helmet as HelmetRaw } from 'react-helmet'
+const Helmet = HelmetRaw as unknown as React.JSXElementConstructor<any>
 
 export const GamePage = () => {
   usePage({ initPage: initGamePage })
@@ -37,9 +38,7 @@ export const GamePage = () => {
     onInputChange,
     onCheckWord,
     onNextWord,
-    onStartNewGame,
     onFinishGame,
-    onToggleFullscreen,
     onSetFullscreen,
   } = useGameStatus()
 
