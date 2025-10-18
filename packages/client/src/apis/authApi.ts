@@ -43,6 +43,15 @@ interface UserResponse {
   avatar: string
 }
 
+interface UpdateUserPayload {
+  first_name?: string
+  second_name?: string
+  display_name?: string
+  login?: string
+  email?: string
+  phone?: string
+}
+
 const AUTH_URL = '/auth'
 const OAUTH_URL = '/oauth/yandex'
 
@@ -103,6 +112,16 @@ const authApi = createApi({
         method: 'POST',
       }),
     }),
+    updateUser: builder.mutation<
+      UserResponse | ErrorResponse,
+      UpdateUserPayload
+    >({
+      query: body => ({
+        url: '/user/profile',
+        method: 'PUT',
+        body,
+      }),
+    }),
   }),
 })
 
@@ -113,6 +132,7 @@ export const {
   useSignInWithYandexIdMutation,
   useGetUserQuery,
   useLogoutMutation,
+  useUpdateUserMutation,
 } = authApi
 
 export default authApi
