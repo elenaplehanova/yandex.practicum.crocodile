@@ -10,7 +10,12 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "format": "lerna run format",
-    "preview": "lerna run preview"
+    "preview": "lerna run preview",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:restart": "docker-compose down && docker-compose up -d",
+    "docker:ps": "docker ps"
   },
   "license": "MIT",
   "workspaces": [
