@@ -1,0 +1,20 @@
+@use '@styles/_extend' as *;
+
+.container {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--g-color-line-generic);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.content {
+  line-height: 1.5;
+  color: var(--g-color-text-primary);
+}
+
+.timestamp {
+  color: var(--g-color-text-secondary);
+  margin-left: auto;
+}

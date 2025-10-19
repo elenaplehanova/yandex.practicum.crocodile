@@ -11,6 +11,7 @@ import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
 import userReducer from './slices/userSlice'
 import authApi from './apis/authApi'
+import emojiApi from './apis/emojiApi'
 import gameReducer from './slices/gameSlice'
 import leaderboardReducer from './slices/leaderboardSlice'
 
@@ -24,6 +25,7 @@ declare global {
 
 export const reducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
+  [emojiApi.reducerPath]: emojiApi.reducer,
   friends: friendsReducer,
   ssr: ssrReducer,
   user: userReducer,
@@ -33,7 +35,7 @@ export const reducer = combineReducers({
 
 export const store = configureStore({
   reducer,
-  middleware: gDM => gDM().concat(authApi.middleware),
+  middleware: gDM => gDM().concat(authApi.middleware, emojiApi.middleware),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })

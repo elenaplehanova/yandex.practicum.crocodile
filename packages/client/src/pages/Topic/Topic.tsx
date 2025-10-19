@@ -9,6 +9,10 @@ import {
 } from '@gravity-ui/uikit'
 import { useState } from 'react'
 import { usePage } from '../../hooks/usePage'
+import {
+  CommentWithReactions,
+  Comment,
+} from '../../components/CommentWithReactions'
 import styles from './Topic.module.scss'
 import { Header } from '@components/Header'
 import { Helmet } from 'react-helmet'
@@ -16,6 +20,18 @@ import { Helmet } from 'react-helmet'
 export const TopicPage = () => {
   usePage({ initPage: initTopicPage })
   const [isFormExpanded, setIsFormExpanded] = useState(false)
+
+  const mockComments: Comment[] = new Array(5).fill('').map((_, i) => ({
+    id: i + 1,
+    content: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem incidunt laborum quaerat quis. Nesciunt possimus saepe temporibus. Alias atque beatae et, excepturi id laudantium molestias quasi quos reiciendis voluptas. A? ${
+      i + 1
+    }`,
+    author: {
+      id: i + 1,
+      displayName: `Пользователь ${i + 1}`,
+    },
+    createdAt: new Date(Date.now() - i * 3600000).toISOString(),
+  }))
 
   return (
     <div className={styles['wrapper']}>
@@ -48,19 +64,8 @@ export const TopicPage = () => {
             </Flex>
           )}
           <Divider />
-          {new Array(20).fill('').map((_, i) => (
-            <Flex key={i} direction="column" gap="4">
-              <Flex gap="2" alignItems="center">
-                <Avatar text="AA" />
-                <Text variant="subheader-1">Ник пользователя</Text>
-              </Flex>
-              <Text>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Dolorem incidunt laborum quaerat quis. Nesciunt possimus saepe
-                temporibus. Alias atque beatae et, excepturi id laudantium
-                molestias quasi quos reiciendis voluptas. A?
-              </Text>
-            </Flex>
+          {mockComments.map(comment => (
+            <CommentWithReactions key={comment.id} comment={comment} />
           ))}
         </Flex>
       </Box>
