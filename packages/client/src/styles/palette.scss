@@ -1,10 +1,44 @@
 :root {
+  --g-color-base-neutral-heavy: #131f2c;
+  --g-color-base-neutral-light: #fefeff;
+  --g-color-base-positive-heavy: #5e95d4;
+
+  --g-color-text-primary: var(--g-color-base-positive-heavy);
+  --g-color-text-secondary: var(--g-color-base-neutral-light);
+  --g-color-text-inverted-secondary: var(--g-color-base-neutral-heavy);
+
+  --g-color-shadow-modal: 0 4px 30px rgba(0, 0, 0, 0.1);
+
   --white: #fefeff;
   --blue: #5e95d4;
   --dark: #131f2c;
+
   --text-shadow-yellow: -1px -1px 0 #ffff00, 1px -1px 0 hsl(60, 100%, 50%),
     -1px 1px 0 yellow, 1px 1px 0 #ffff00, 0 0 8px #ffd000cc, 0 0 16px #ffd000cc;
 
   --text-shadow-light: 0 0 4px rgba(255, 255, 255, 0.6),
     0 0 8px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 255, 255, 0.4);
+
+  --g-color-base-gradiend-start: rgba(255, 255, 255, 0.4);
+  --g-color-base-gradiend-end: rgba(255, 255, 255, 0.4);
+}
+
+.g-root_theme_dark {
+
+  color: var(--white);
+
+  a {
+    color: var(--white);
+  }
+
+  --g-color-base-neutral-heavy: #131f2c;
+  --g-color-base-neutral-light: #fefeff;
+  --g-color-base-generic-ultralight: #fefeff;
+
+  --g-color-base-gradiend-start: rgba(0, 0, 0, 0.4);
+  --g-color-base-gradiend-end: rgba(0, 0, 0, 0.4);
+
+  --text-shadow-light: 0 0 4px rgba(0, 0, 0, 0.6),
+    0 0 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 0, 0, 0.4);
+
 }
