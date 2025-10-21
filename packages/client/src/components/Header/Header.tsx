@@ -4,6 +4,7 @@ import { Button } from '@gravity-ui/uikit'
 import { logoutThunk } from '@slices/userSlice'
 import { selectUser } from '@slices/userSlice'
 import GetLocation from '@components/GetLocation/GetLocation'
+import { SwitchTheme } from '@components/SwitchTheme/SwitchTheme'
 import s from './Header.module.scss'
 
 type MenuItem = {
@@ -67,6 +68,7 @@ export const Header = () => {
           </div>
         )}
       </nav>
+      <SwitchTheme />
     </div>
   )
 }

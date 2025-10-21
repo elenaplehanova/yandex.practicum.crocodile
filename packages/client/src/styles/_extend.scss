@@ -1,14 +1,14 @@
 %wrapper {
   background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
+      var(--g-color-base-gradiend-start),
+      var(--g-color-base-gradiend-end)
     ),
     url('../assets/background_start_game.jpg') no-repeat center center;
   background-size: 250px 250px, cover, cover;
 }
 
 %form-block {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--g-color-base-background);
   border-radius: 12px;
   padding: 40px;
 }
