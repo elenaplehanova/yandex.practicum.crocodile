@@ -21,38 +21,42 @@ import {
   updateUserPartially,
 } from '@slices/userSlice'
 import { PageInitArgs } from 'routes'
-import { API_URL } from '../../constants'
+import { API_URL, API_PROXY_URL } from '../../constants'
 import { useDispatch, useSelector } from '../../store'
+import { useUpdateUserMutation } from '../../apis/authApi'
 import styles from './ProfilePage.module.scss'
 
 export const ProfilePage = () => {
   const [message, setMessage] = useState('')
+  const [avatarKey, setAvatarKey] = useState(0)
   const user = useSelector(selectUser)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [updateUser] = useUpdateUserMutation()
 
   usePage({ initPage: initProfilePage })
 
-  const handleProfileUpdate = () => {
-    fetch(`${API_URL}/user/profile`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(user),
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`Ошибка обновления профиля: ${res.status}`)
-        }
-        setMessage('Профиль обновлен')
-      })
+  const handleProfileUpdate = async () => {
+    if (!user) return
 
-      .catch(error => {
-        setMessage('Ошибка при обновлении профиля: ' + error.message)
-      })
+    try {
+      const result = await updateUser({
+        first_name: user.first_name,
+        second_name: user.second_name,
+        display_name: user.display_name,
+        login: user.login,
+        email: user.email,
+        phone: user.phone,
+      }).unwrap()
+
+      setMessage('Профиль обновлен')
+    } catch (error: any) {
+      setMessage(
+        'Ошибка при обновлении профиля: ' +
+          (error.message || 'Неизвестная ошибка')
+      )
+    }
   }
 
   const handleLogout = async () => {
@@ -66,20 +70,35 @@ export const ProfilePage = () => {
   }
 
   const AvatarUpdate = () => {
-    const onUpdate = React.useCallback(async (files: File[]) => {
-      const formData = new FormData()
-      formData.append('avatar', files[0] as File)
-      const response = await fetch(`${API_URL}/user/profile/avatar`, {
-        method: 'PUT',
-        headers: {},
-        credentials: 'include',
-        body: formData,
-      })
-      const data = await response.json()
-      dispatch(updateUserPartially({ avatar: data.avatar }))
+    const onUpdate = React.useCallback(
+      async (files: File[]) => {
+        try {
+          const formData = new FormData()
+          formData.append('avatar', files[0] as File)
+          const response = await fetch(`${API_PROXY_URL}/user/profile/avatar`, {
+            method: 'PUT',
+            headers: {},
+            credentials: 'include',
+            body: formData,
+          })
 
-      setMessage('Аватар изменен')
-    }, [])
+          if (!response.ok) {
+            throw new Error(`Ошибка загрузки аватара: ${response.status}`)
+          }
+
+          const data = await response.json()
+          dispatch(updateUserPartially({ avatar: data.avatar }))
+          setAvatarKey(prev => prev + 1)
+          setMessage('Аватар изменен')
+        } catch (error: any) {
+          setMessage(
+            'Ошибка при загрузке аватара: ' +
+              (error.message || 'Неизвестная ошибка')
+          )
+        }
+      },
+      [dispatch]
+    )
     const { controlProps, triggerProps } = useFileInput({
       onUpdate,
     })
@@ -106,9 +125,16 @@ export const ProfilePage = () => {
           <Flex direction="column" gap="4">
             <Flex gap="2" className={styles['profile-page__avatar']}>
               <Avatar
-                alt={user?.first_name}
+                key={avatarKey}
+                alt={user?.first_name || 'Пользователь'}
                 size="xl"
-                imgUrl={`${API_URL}/resources/${user?.avatar}`}
+                imgUrl={
+                  user?.avatar
+                    ? `${API_PROXY_URL}/resources/${
+                        user.avatar
+                      }?t=${Date.now()}`
+                    : ''
+                }
               />
               <AvatarUpdate />
             </Flex>
@@ -120,14 +146,14 @@ export const ProfilePage = () => {
             <Flex gap="2">
               <TextInput
                 placeholder="Имя"
-                value={user?.first_name}
+                value={user?.first_name || ''}
                 onChange={e =>
                   dispatch(updateUserPartially({ first_name: e.target.value }))
                 }
               />
               <TextInput
                 placeholder="Фамилия"
-                value={user?.second_name}
+                value={user?.second_name || ''}
                 onChange={e =>
                   dispatch(updateUserPartially({ second_name: e.target.value }))
                 }
@@ -136,7 +162,7 @@ export const ProfilePage = () => {
             <Flex gap="2">
               <TextInput
                 placeholder="Никнейм"
-                value={user?.display_name}
+                value={user?.display_name || ''}
                 onChange={e =>
                   dispatch(
                     updateUserPartially({ display_name: e.target.value })
@@ -145,7 +171,7 @@ export const ProfilePage = () => {
               />
               <TextInput
                 placeholder="Логин"
-                value={user?.login}
+                value={user?.login || ''}
                 onChange={e =>
                   dispatch(updateUserPartially({ login: e.target.value }))
                 }
@@ -154,14 +180,14 @@ export const ProfilePage = () => {
             <Flex gap="2">
               <TextInput
                 placeholder="Email"
-                value={user?.email}
+                value={user?.email || ''}
                 onChange={e =>
                   dispatch(updateUserPartially({ email: e.target.value }))
                 }
               />
               <TextInput
                 placeholder="Телефон"
-                value={user?.phone}
+                value={user?.phone || ''}
                 onChange={e =>
                   dispatch(updateUserPartially({ phone: e.target.value }))
                 }
