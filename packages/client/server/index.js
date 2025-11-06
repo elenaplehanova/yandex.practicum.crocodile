@@ -34,7 +34,7 @@ const promises_1 = __importDefault(require("fs/promises"));
 const vite_1 = require("vite");
 const serialize_javascript_1 = __importDefault(require("serialize-javascript"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const port = process.env.PORT || 80;
+const port = process.env.CLIENT_PORT || 80;
 const clientPath = path_1.default.join(__dirname, '..');
 const isDev = process.env.NODE_ENV === 'development';
 async function createServer() {
@@ -59,7 +59,7 @@ async function createServer() {
             // Создаём переменные
             let render;
             let template;
-            if (vite) {
+            if (vite && isDev) {
                 template = await promises_1.default.readFile(path_1.default.resolve(clientPath, 'index.html'), 'utf-8');
                 // Применяем встроенные HTML-преобразования vite и плагинов
                 template = await vite.transformIndexHtml(url, template);
@@ -88,8 +88,11 @@ async function createServer() {
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
         }
         catch (e) {
-            vite.ssrFixStacktrace(e);
+            if (isDev) {
+                vite.ssrFixStacktrace(e);
+            }
             next(e);
+            console.dir(e);
         }
     });
     app.listen(port, () => {

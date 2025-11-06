@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { TextInput, Button } from '@gravity-ui/uikit'
 
-import {
-  useSignInMutation,
-  type ErrorResponse,
-} from '../../../../slices/apiSlice'
+import { useSignInMutation, type ErrorResponse } from '../../../../apis/authApi'
 import { getErrorTranslation, InputNames, VALIDATOR } from '../../../../utils'
+import { useYandexOAuth } from '../../../../hooks/useYandexOAuth'
 import type { InputProps, SignInFormValues } from './SignInForm.types'
 import styles from './SignInForm.module.scss'
 
 export const SignInForm: FC = () => {
   const navigate = useNavigate()
   const [signIn, { error, isLoading, isSuccess, isError }] = useSignInMutation()
+  const { initiateAuth, isLoading: oAuthLoading } = useYandexOAuth()
 
   const {
     control,
@@ -121,6 +120,15 @@ export const SignInForm: FC = () => {
           {navigateButtonTitle}
         </Button>
       </fieldset>
+      <Button
+        view="action"
+        size="xl"
+        width="max"
+        onClick={initiateAuth}
+        loading={oAuthLoading}
+        disabled={isLoading || oAuthLoading}>
+        Войти с помощью Яндекс.ID
+      </Button>
     </form>
   )
 }

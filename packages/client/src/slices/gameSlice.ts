@@ -5,12 +5,14 @@ import { GameState, GameStateType, GameStatus } from '../types/game'
 export type PlayedWord = {
   word: string
   guessed: boolean
+  firstGuess: boolean
 }
 
 type ExtendedGameStatus = GameStatus & {
   timeLeft: number
   isShowResults: boolean
   playedWords: PlayedWord[]
+  currentWordAttempts: number
 }
 
 const initialState: ExtendedGameStatus = {
@@ -24,6 +26,7 @@ const initialState: ExtendedGameStatus = {
   timeLeft: 60,
   isShowResults: false,
   playedWords: [],
+  currentWordAttempts: 0,
 }
 
 export const gameSlice = createSlice({
@@ -53,6 +56,7 @@ export const gameSlice = createSlice({
       state.isCorrect = null
       state.gameState = GameState.Waiting
       state.isFullscreen = false
+      state.currentWordAttempts = 0
     },
     toggleWord: state => {
       if (state.gameState === GameState.Waiting) {
@@ -93,14 +97,30 @@ export const gameSlice = createSlice({
         state.isCorrect = true
         state.errorMessage = 'Правильно! Показывайте следующее слово'
         state.inputWord = ''
+        state.playedWords.push({
+          word: state.currentWord,
+          guessed: true,
+          firstGuess: state.currentWordAttempts === 0,
+        })
+        state.currentWordAttempts = 0
       } else {
         state.isCorrect = false
         state.errorMessage = 'Неправильное слово'
+        state.currentWordAttempts += 1
       }
     },
 
     nextWord: state => {
+      const lastWord = state.playedWords[state.playedWords.length - 1]
+      if (!lastWord || lastWord.word !== state.currentWord) {
+        state.playedWords.push({
+          word: state.currentWord,
+          guessed: false,
+          firstGuess: false,
+        })
+      }
       state.currentWord = getNextWord(state.currentWord)
+      state.currentWordAttempts = 0
     },
 
     startNewGame: state => {
@@ -114,6 +134,7 @@ export const gameSlice = createSlice({
       state.isShowResults = false
       state.playedWords = []
       state.timeLeft = 60
+      state.currentWordAttempts = 0
     },
 
     clearError: state => {
@@ -168,5 +189,13 @@ export const selectInputWord = (state: any) => state.game.inputWord
 export const selectErrorMessage = (state: any) => state.game.errorMessage
 export const selectIsCorrect = (state: any) => state.game.isCorrect
 export const selectIsFullscreen = (state: any) => state.game.isFullscreen
+export const selectPlayedWords = (state: any) => state.game.playedWords
+export const selectGuessedWordsCount = (state: any) =>
+  state.game.playedWords.filter((word: PlayedWord) => word.guessed).length
+export const selectFirstGuessWinsCount = (state: any) =>
+  state.game.playedWords.filter(
+    (word: PlayedWord) => word.guessed && word.firstGuess
+  ).length
+export const selectCountry = (state: any) => state.country
 
 export default gameSlice.reducer

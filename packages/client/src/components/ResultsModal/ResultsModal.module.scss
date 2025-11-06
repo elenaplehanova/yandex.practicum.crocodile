@@ -78,4 +78,25 @@
     --g-button-text-color: var(--g-color-base-generic-ultralight, white);
     font-weight: 700;
   }
+
+  &__status {
+    text-align: center;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    text-shadow: var(--text-shadow-light);
+
+    &--success {
+      background-color: rgba(0, 255, 0, 0.2);
+      border: 1px solid rgba(0, 255, 0, 0.5);
+      color: #90EE90;
+    }
+
+    &--error {
+      background-color: rgba(255, 0, 0, 0.2);
+      border: 1px solid rgba(255, 0, 0, 0.5);
+      color: #FFB6C1;
+    }
+  }
 }

@@ -1,10 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { SERVER_HOST } from '../constants'
+import { API_PROXY_URL } from '../constants'
 
 interface User {
-  name: string
-  secondName: string
+  id: number
+  first_name: string
+  second_name: string
+  display_name: string
+  phone: string
+  login: string
+  avatar: string
+  email: string
 }
 
 export interface UserState {
@@ -20,15 +26,45 @@ const initialState: UserState = {
 export const fetchUserThunk = createAsyncThunk(
   'user/fetchUserThunk',
   async () => {
-    const url = `${SERVER_HOST}/user`
-    return fetch(url).then(res => res.json())
+    const response = await fetch(`${API_PROXY_URL}/auth/user`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error('Ошибка при получении данных пользователя')
+    }
+
+    const userData = await response.json()
+
+    return userData
   }
 )
+
+export const logoutThunk = createAsyncThunk('user/logoutThunk', async () => {
+  const url = `${API_PROXY_URL}/auth/logout`
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+  })
+
+  if (!response.ok) {
+    throw new Error('Ошибка при выходе из системы')
+  }
+
+  return null
+})
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    updateUserPartially: (state, { payload }: PayloadAction<Partial<User>>) => {
+      if (state.data) {
+        state.data = { ...state.data, ...payload }
+      }
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchUserThunk.pending.type, state => {
@@ -42,12 +78,24 @@ export const userSlice = createSlice({
           state.isLoading = false
         }
       )
-      .addCase(fetchUserThunk.rejected.type, state => {
+      .addCase(fetchUserThunk.rejected.type, (state, action) => {
+        state.isLoading = false
+      })
+      .addCase(logoutThunk.pending.type, state => {
+        state.isLoading = true
+      })
+      .addCase(logoutThunk.fulfilled.type, state => {
+        state.data = null
+        state.isLoading = false
+      })
+      .addCase(logoutThunk.rejected.type, (state, action) => {
         state.isLoading = false
       })
   },
 })
 
 export const selectUser = (state: RootState) => state.user.data
+
+export const { updateUserPartially } = userSlice.actions
 
 export default userSlice.reducer

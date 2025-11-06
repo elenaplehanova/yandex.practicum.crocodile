@@ -1,1 +1,2 @@
-export { LeaderboardTable, type LeaderboardData } from './LeaderboardTable'
+export { LeaderboardTable } from './LeaderboardTable'
+export type { LeaderboardData } from '@apis/leaderboardApi'

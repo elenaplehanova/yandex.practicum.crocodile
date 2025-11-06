@@ -8,6 +8,15 @@ dotenv.config()
 export default defineConfig({
   server: {
     port: Number(process.env.CLIENT_PORT) || 3000,
+    proxy: {
+      '/api/v2': {
+        changeOrigin: true,
+        cookieDomainRewrite: {
+          '*': '',
+        },
+        target: 'http://localhost:3001',
+      },
+    },
   },
   define: {
     __EXTERNAL_SERVER_URL__: JSON.stringify(process.env.EXTERNAL_SERVER_URL),
@@ -15,9 +24,13 @@ export default defineConfig({
   },
   build: {
     outDir: path.join(__dirname, 'dist/client'),
+    manifest: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, 'index.html'),
+    },
   },
   ssr: {
-    format: 'esm',
+    format: 'cjs',
     noExternal: ['@gravity-ui/uikit'],
   },
   plugins: [
@@ -55,6 +68,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
+      '@apis': path.resolve(__dirname, 'src/apis'),
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@slices': path.resolve(__dirname, 'src/slices'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),

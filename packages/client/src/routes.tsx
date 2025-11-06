@@ -1,7 +1,8 @@
 import { AppDispatch, RootState } from './store'
+import { withAuth } from './hocs/withAuth'
 import { initMainPage, MainPage } from './pages/MainPage'
 import { ForumPage, initForumPage } from './pages/Forum/Forum'
-import { GamePage } from './pages/GamePage/GamePage'
+import { GamePage, initGamePage } from './pages/GamePage/GamePage'
 import { initLeaderboardPage, LeaderboardPage } from './pages/LeaderboardPage'
 import { initProfilePage, ProfilePage } from './pages/Profile/ProfilePage'
 import { initTopicPage, TopicPage } from './pages/Topic'
@@ -14,7 +15,7 @@ import {
   ServerErrorPage,
 } from './pages/ServerErrorPage/ServerErrorPage'
 import { StartPage, initStartPage } from './pages/StartPage'
-import { SignInPage, SignUpPage } from './pages/Auth'
+import { SignInPage, SignUpPage, OAuthCallbackPage } from './pages/Auth'
 import { initSubmitTopicPage, SubmitTopicPage } from './pages/SubmitTopic'
 
 export type PageInitContext = {
@@ -30,7 +31,7 @@ export type PageInitArgs = {
 export const routes = [
   {
     path: '/',
-    Component: MainPage,
+    Component: withAuth(MainPage),
     fetchData: initMainPage,
   },
   {
@@ -42,48 +43,52 @@ export const routes = [
     Component: SignUpPage,
   },
   {
+    path: '/oauth',
+    Component: OAuthCallbackPage,
+  },
+  {
     path: '/profile',
-    Component: ProfilePage,
+    Component: withAuth(ProfilePage),
     fetchData: initProfilePage,
   },
   {
     path: '/game',
-    Component: GamePage,
-    fetchData: () => Promise.resolve(),
+    Component: withAuth(GamePage),
+    fetchData: initGamePage,
   },
   {
     path: '/leaderboard',
-    Component: LeaderboardPage,
+    Component: withAuth(LeaderboardPage),
     fetchData: initLeaderboardPage,
   },
   {
     path: '/forum',
-    Component: ForumPage,
+    Component: withAuth(ForumPage),
     fetchData: initForumPage,
   },
   {
     path: '/forum/submit',
-    Component: SubmitTopicPage,
+    Component: withAuth(SubmitTopicPage),
     fetchData: initSubmitTopicPage,
   },
   {
     path: '/forum/:topicId',
-    Component: TopicPage,
+    Component: withAuth(TopicPage),
     fetchData: initTopicPage,
   },
   {
     path: '/start',
-    Component: StartPage,
+    Component: withAuth(StartPage),
     fetchData: initStartPage,
   },
   {
     path: '/505',
-    Component: ServerErrorPage,
+    Component: withAuth(ServerErrorPage),
     fetchData: initServerErrorPage,
   },
   {
     path: '*',
-    Component: NotFoundPage,
+    Component: withAuth(NotFoundPage),
     fetchData: initNotFoundPage,
   },
 ]

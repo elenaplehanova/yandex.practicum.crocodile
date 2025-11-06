@@ -10,7 +10,7 @@ import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 import cookieParser from 'cookie-parser'
 
-const port = process.env.PORT || 80
+const port = process.env.CLIENT_PORT || 80
 const clientPath = path.join(__dirname, '..')
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -46,7 +46,7 @@ async function createServer() {
         styleTags: string
       }>
       let template: string
-      if (vite) {
+      if (vite && isDev) {
         template = await fs.readFile(
           path.resolve(clientPath, 'index.html'),
           'utf-8'
@@ -104,8 +104,12 @@ async function createServer() {
       // Завершаем запрос и отдаём HTML-страницу
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
-      vite.ssrFixStacktrace(e as Error)
+      if (isDev) {
+        vite!.ssrFixStacktrace(e as Error)
+      }
       next(e)
+
+      console.dir(e)
     }
   })
 

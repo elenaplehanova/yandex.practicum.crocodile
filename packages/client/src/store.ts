@@ -10,8 +10,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
 import userReducer from './slices/userSlice'
-import { api } from './slices/apiSlice'
+import authApi from './apis/authApi'
+import emojiApi from './apis/emojiApi'
 import gameReducer from './slices/gameSlice'
+import leaderboardReducer from './slices/leaderboardSlice'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -22,16 +24,18 @@ declare global {
 }
 
 export const reducer = combineReducers({
-  [api.reducerPath]: api.reducer,
+  [authApi.reducerPath]: authApi.reducer,
+  [emojiApi.reducerPath]: emojiApi.reducer,
   friends: friendsReducer,
   ssr: ssrReducer,
   user: userReducer,
   game: gameReducer,
+  leaderboard: leaderboardReducer,
 })
 
 export const store = configureStore({
   reducer,
-  middleware: gDM => gDM().concat(api.middleware),
+  middleware: gDM => gDM().concat(authApi.middleware, emojiApi.middleware),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })

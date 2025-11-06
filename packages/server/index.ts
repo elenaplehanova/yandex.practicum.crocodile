@@ -1,15 +1,39 @@
 import dotenv from 'dotenv'
 import cors from 'cors'
+import express, { Request, Response, NextFunction } from 'express'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+import { authMiddleware } from './middlewares/authMiddleware'
+
 dotenv.config()
 
-import express from 'express'
-import { createClientAndConnect } from './db'
+const PORT = Number(process.env.SERVER_PORT) || 3001
+const openRoutes = [
+  '/api/v2/auth/signin',
+  '/api/v2/auth/signup',
+  '/api/v2/oauth/yandex/service-id',
+]
 
 const app = express()
 app.use(cors())
-const port = Number(process.env.SERVER_PORT) || 3001
 
-createClientAndConnect()
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (openRoutes.some(path => req.path.startsWith(path))) {
+    return next()
+  }
+
+  return authMiddleware(req, res, next)
+})
+
+app.use(
+  '/api/v2',
+  createProxyMiddleware({
+    changeOrigin: true,
+    cookieDomainRewrite: {
+      '*': '',
+    },
+    target: 'https://ya-praktikum.tech/api/v2',
+  })
+)
 
 app.get('/friends', (_, res) => {
   res.json([
@@ -19,14 +43,10 @@ app.get('/friends', (_, res) => {
   ])
 })
 
-app.get('/user', (_, res) => {
-  res.json({ name: '</script>Степа', secondName: 'Степанов' })
-})
-
-app.get('/', (_, res) => {
+app.get('/api', (_, res) => {
   res.json('👋 Howdy from the server :)')
 })
 
-app.listen(port, () => {
-  console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
+app.listen(PORT, () => {
+  console.log(`  ➜ 🎸 Server is listening on port: ${PORT}`)
 })

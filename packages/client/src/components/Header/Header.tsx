@@ -1,4 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from '../../store'
+import { Button } from '@gravity-ui/uikit'
+import { logoutThunk } from '@slices/userSlice'
+import { selectUser } from '@slices/userSlice'
+import GetLocation from '@components/GetLocation/GetLocation'
+import { SwitchTheme } from '@components/SwitchTheme/SwitchTheme'
 import s from './Header.module.scss'
 
 type MenuItem = {
@@ -16,6 +22,19 @@ const MENU_ITEMS: MenuItem[] = [
 ]
 
 export const Header = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector(selectUser)
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutThunk())
+      navigate('/sign-in')
+    } catch (error) {
+      console.error('Ошибка при выходе:', error)
+    }
+  }
+
   return (
     <div className={s['header']}>
       <div className={s['header__logo']}>CROCODILE</div>
@@ -31,7 +50,25 @@ export const Header = () => {
             )
           })}
         </ul>
+        {user && (
+          <div className={s['header__user-section']}>
+            <span className={s['header__user-name']}>
+              {user.first_name} {user.second_name}
+            </span>
+
+            <GetLocation />
+
+            <Button
+              size="s"
+              view="outlined-danger"
+              onClick={handleLogout}
+              className={s['header__logout-btn']}>
+              Выйти
+            </Button>
+          </div>
+        )}
       </nav>
+      <SwitchTheme />
     </div>
   )
 }

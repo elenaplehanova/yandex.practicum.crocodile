@@ -1,5 +1,11 @@
+@use '@styles/_extend' as *;
+
+.wrapper {
+  @extend %wrapper;
+}
+
 .root {
-  padding-top: 24px;
+  padding: 15px;
 }
 
 .topic-list {

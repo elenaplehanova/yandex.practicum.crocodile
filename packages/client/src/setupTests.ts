@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom'
 
+// Мокаем fetch для тестовой среды
+global.fetch = jest.fn()
+
 // jsdom не реализует matchMedia — мокаем для UI Kit
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

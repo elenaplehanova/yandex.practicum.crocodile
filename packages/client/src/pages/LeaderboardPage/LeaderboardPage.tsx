@@ -1,39 +1,30 @@
-import s from './LeaderboardPage.module.scss'
 import { Helmet } from 'react-helmet'
+import { Button } from '@gravity-ui/uikit'
+
 import { Header } from '@components/Header'
-import { PageInitArgs } from 'routes'
-import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import { usePage } from '@hooks/usePage'
+import { LeaderboardTable } from '@components/LeaderboardTable'
+import { fetchLeaderboardThunk } from '@slices/leaderboardThunks'
+import { fetchUserThunk, selectUser } from '@slices/userSlice'
 import {
-  LeaderboardTable,
-  type LeaderboardData,
-} from '@components/LeaderboardTable'
+  selectLeaderboardLoading,
+  selectLeaderboardError,
+  selectLeaderboardData,
+} from '@slices/leaderboardSlice'
+import { PageInitArgs } from 'routes'
+import { useDispatch, useSelector } from '../../store'
+import s from './LeaderboardPage.module.scss'
 
 export const LeaderboardPage = () => {
   usePage({ initPage: initLeaderboardPage })
 
-  const data: LeaderboardData[] = [
-    {
-      name: 'Биба',
-      count: 12,
-      firstGuessWins: 5,
-    },
-    {
-      name: 'Боба',
-      count: 5,
-      firstGuessWins: 1,
-    },
-    {
-      name: 'Пупа',
-      count: 10,
-      firstGuessWins: 3,
-    },
-    {
-      name: 'Лупа',
-      count: 18,
-      firstGuessWins: 15,
-    },
-  ]
+  const dispatch = useDispatch()
+  const isLoading = useSelector(selectLeaderboardLoading)
+  const error = useSelector(selectLeaderboardError)
+
+  const handleRefresh = () => {
+    dispatch(fetchLeaderboardThunk())
+  }
 
   return (
     <div className={s['leaderboard-page']}>
@@ -44,9 +35,24 @@ export const LeaderboardPage = () => {
       </Helmet>
       <Header />
       <div className={s['leaderboard-page__container']}>
-        <h1 className={s['leaderboard-page__header']}>Таблица лидеров</h1>
+        <div className={s['leaderboard-page__header-section']}>
+          <h1 className={s['leaderboard-page__header']}>Таблица лидеров</h1>
+          <Button
+            view="outlined"
+            onClick={handleRefresh}
+            loading={isLoading}
+            className={s['leaderboard-page__refresh-btn']}>
+            Обновить
+          </Button>
+        </div>
         <div className={s['leaderboard-page__table']}>
-          <LeaderboardTable data={data} />
+          {isLoading ? (
+            <div>Загрузка...</div>
+          ) : error ? (
+            <div>Ошибка: {error}</div>
+          ) : (
+            <LeaderboardTable />
+          )}
         </div>
       </div>
     </div>
@@ -57,7 +63,15 @@ export const initLeaderboardPage = async ({
   dispatch,
   state,
 }: PageInitArgs) => {
+  const queue: Array<Promise<unknown>> = []
+
   if (!selectUser(state)) {
-    return dispatch(fetchUserThunk())
+    queue.push(dispatch(fetchUserThunk()))
   }
+
+  if (!selectLeaderboardData(state).length) {
+    queue.push(dispatch(fetchLeaderboardThunk()))
+  }
+
+  return Promise.all(queue)
 }

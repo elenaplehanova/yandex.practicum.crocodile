@@ -21,6 +21,7 @@ export const MainPage = () => {
         <title>Главная</title>
         <meta name="description" content="Главная страница" />
       </Helmet>
+
       <Header />
 
       <section className={s['main-page__content']}>
