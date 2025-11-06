@@ -22,13 +22,6 @@ export default defineConfig({
     __EXTERNAL_SERVER_URL__: JSON.stringify(process.env.EXTERNAL_SERVER_URL),
     __INTERNAL_SERVER_URL__: JSON.stringify(process.env.INTERNAL_SERVER_URL),
   },
-  build: {
-    outDir: path.join(__dirname, 'dist/client'),
-    manifest: true,
-    rollupOptions: {
-      input: path.resolve(__dirname, 'index.html'),
-    },
-  },
   ssr: {
     format: 'cjs',
     noExternal: ['@gravity-ui/uikit'],
