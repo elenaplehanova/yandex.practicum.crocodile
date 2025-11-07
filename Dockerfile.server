@@ -15,7 +15,6 @@ COPY . .
 RUN yarn lerna bootstrap
 RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
 
-
 FROM node:$NODE_VERSION-buster-slim as production
 WORKDIR /app
 
