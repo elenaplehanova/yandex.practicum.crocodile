@@ -1,6 +1,12 @@
-node_modules
+**/node_modules
 packages/*/node_modules
 dist
 .git
 Dockerfile*
 docker-compose.yml
+tmp/
+tmp/pgdata/
+.env
+.env.*
+EOF
+

@@ -64,7 +64,7 @@ async function createServer() {
         ).render
       } else {
         template = await fs.readFile(
-          path.join(clientPath, 'dist/client/index.html'),
+          path.join(clientPath, 'dist/index.html'),
           'utf-8'
         )
 
