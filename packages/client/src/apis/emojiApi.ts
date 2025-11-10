@@ -52,29 +52,7 @@ const emojiApi = createApi({
       }),
       transformResponse: (response: any, meta, commentId) => ({
         commentId,
-        reactions: [
-          {
-            id: 1,
-            emoji: '👍',
-            userId: 1,
-            commentId,
-            createdAt: new Date().toISOString(),
-          },
-          {
-            id: 2,
-            emoji: '❤️',
-            userId: 2,
-            commentId,
-            createdAt: new Date().toISOString(),
-          },
-          {
-            id: 3,
-            emoji: '😂',
-            userId: 3,
-            commentId,
-            createdAt: new Date().toISOString(),
-          },
-        ],
+        reactions: response.reactions || [],
       }),
       providesTags: (result, error, commentId) => [
         { type: 'EmojiReaction', id: commentId },
@@ -92,14 +70,18 @@ const emojiApi = createApi({
       ],
     }),
 
-    removeEmojiReaction: builder.mutation<void, RemoveEmojiReactionPayload>({
+    removeEmojiReaction: builder.mutation<
+      { commentId: number },
+      RemoveEmojiReactionPayload
+    >({
       query: ({ reactionId }) => ({
         url: `${EMOJI_URL}/reaction/${reactionId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, { reactionId }) => [
-        { type: 'EmojiReaction', id: reactionId },
-      ],
+      invalidatesTags: (result, error, payload) => {
+        if (error || !result) return []
+        return [{ type: 'EmojiReaction', id: result.commentId }]
+      },
     }),
 
     getAvailableEmojis: builder.query<string[], void>({
